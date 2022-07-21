@@ -51,13 +51,13 @@ int main()
 		
 	int i;
 	int aux = 0;
-	int b = -1;
+	int num_enem = 0;
 	int contt = 1;
 	int contt_ = 1;
 	bool fuego = false;
 	bool freno = true;
 	bool disparo = false;
-	//int x1, y1;
+	int x1, y1;
 	float vel_x[16];
 	float vel_y[16];
 	int aux1 = 0;
@@ -75,7 +75,7 @@ int main()
 	float pos_y_bala2 = 1;
 	float pos_x_bala2 = 1;
 	float x = 800, y = 600;
-	int borrar = 0;
+	int j;
 
 	const char* fuego1 = "Imagenes/Frame/fuego1.png";
 	const char* fuego2 = "Imagenes/Frame/fuego2.png";
@@ -210,7 +210,11 @@ int main()
 		al_draw_bitmap(isla_2, 1000, 200, 0);
 		al_wait_for_event(cola, &Evento);
 
+		
+
+
 		/*//==============     CARGAR POSICIONES DEL JUGADOR     =============================//*/
+
 
 		if (Evento.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
@@ -230,8 +234,6 @@ int main()
 				{
 					cont = 0;
 				}
-			
-
 			}
 			if (Evento.keyboard.keycode == ALLEGRO_KEY_LEFT)
 			{
@@ -254,11 +256,12 @@ int main()
 		{
 			x1 = Evento.mouse.x;
 			y1 = Evento.mouse.y;
-			if (Evento.mouse.button & 1)
+			if (Evento.mouse.button)
 			{
 				printf("\n X = %d\n", x1);
 				printf("Y = %d", y1);
 			}
+			
 		}*/
 		//================== CARGAR POSICIONES DE LAS BALAS    ==============================//
 
@@ -351,6 +354,7 @@ int main()
 		}
 
 		//====================    APARICION DE ENEMEGOS   ========================//
+
 		if (Evento.type == ALLEGRO_EVENT_TIMER)
 		{
 
@@ -359,25 +363,27 @@ int main()
 				segundo = segundo + 0.1;
 			}
 		}
-		if (aux1 == 0 && b < max_enemy)
+
+
+		if (aux1 == 0 && num_enem < max_enemy)
 		{
-			b++;
-			enem[b].pos_x = 50 + rand() % 300;
-			enem[b].pos_y = 1080;
-			enem[b].vel_x = 0;
-			enem[b].vel_y = vel_enemy;
-			enem[b].ndisparos = 0;
+			num_enem++;
+			enem[num_enem].pos_x = 50 + rand() % 300;
+			enem[num_enem].pos_y = 1080;
+			enem[num_enem].vel_x = 0;
+			enem[num_enem].vel_y = vel_enemy;
+			enem[num_enem].ndisparos = 0;
 			aux1 = 1;
 		}
 
-		if (cont2++ > 220)
+		if (cont2++ > 120)
 		{
 			aux1 = 0; cont2 = 0;
 		}
 
-		if (b > 0)
+		if (num_enem > 0)
 		{
-			for (i = 1; i < max_enemy; i++)
+			for (i = 1; i <= num_enem; i++)
 			{
 				if (enem[i].pos_y != -150 && enem[i].pos_y > -150)
 				{
@@ -387,37 +393,42 @@ int main()
 			}		
 		}
 
-
-		if (segundo > 2 && aux == 0)
-		{
-			if (enem[b].ndisparos <= max_disparos)
-			{
-				enem[b].ndisparos++;
-				disparos[enem[b].ndisparos].x = enem[b].pos_x + 97;
-				disparos[enem[b].ndisparos].y = enem[b].pos_y + 39;
-
-				disparos[enem[b].ndisparos].vel_x = 20;
-				disparos[enem[b].ndisparos].vel_y = 0;
-
-				aux = 1;
-			}
-			
-		}
+		//================= CREACION DE LAS BALAS ENEMIGAS  =======================//
 		
-		if (contt++ > 30)
+		for (j = 1; j <= num_enem; j++)
 		{
-			aux = 0; contt = 0;
-		}
-	
-		
-		if (enem[b].ndisparos > 0 && enem[b].ndisparos < max_disparos)
-		{
-			for (i = 1; i <= enem[b].ndisparos; i++)
+			if (segundo > 2 && aux == 0)
 			{
-				disparos[i].x = disparos[i].x + disparos[i].vel_x;
-				if (disparos[i].x >= enem[b].pos_x && disparos[i].x <= 1980)
+				if (enem[j].ndisparos <= max_disparos)
 				{
-					al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, 0);
+					enem[j].ndisparos++;
+					disparos[enem[j].ndisparos].x = enem[j].pos_x + 97;
+					disparos[enem[j].ndisparos].y = enem[j].pos_y + 39;
+					disparos[enem[j].ndisparos].vel_x = 20;
+					disparos[enem[j].ndisparos].vel_y = 0;
+
+					aux = 1;
+				}
+
+			}
+			if (contt++ > 30)
+			{
+				aux = 0; contt = 0;
+			}
+		}
+		
+		for (j = 1; j <= num_enem; j++)
+		{
+			if (enem[j].ndisparos > 0 && enem[j].ndisparos < max_disparos)
+			{
+				for (i = 2; i <= enem[j].ndisparos; i++)
+				{
+					disparos[i].x = disparos[i].x + disparos[i].vel_x;
+
+					if (disparos[i].x >= enem[j].pos_x && disparos[i].x <= 1980)
+					{
+						al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, 0);
+					}
 				}
 			}
 		}
@@ -425,7 +436,7 @@ int main()
 		//==================   COLISION BALA-----ENEMIGO   =================//
 		if (cant_disparos > 0)
 		{
-			for (k = 0; k < max_enemy; k++)
+			for (k = 1; k < max_enemy; k++)
 			{
 				for (i = 0; i <= cant_disparos; i++)
 				{
@@ -443,7 +454,14 @@ int main()
 
 		//====================	COLISION BALA-------JUGADOR	================//
 	
-		for (i = 1; i <= enem[b].ndisparos; i++)
+
+		//CICLO IGUAL QUE LAS BALAS
+
+		//ARGUMENTOS DE LA FUNCION: b,enem[b], x,y disparos[i],omega[cont]
+
+		//RETORNA: El entero;
+
+		for (i = 1; i <= enem[num_enem].ndisparos; i++)
 		{
 			if (omega[cont] == 0)
 			{
@@ -527,6 +545,26 @@ int main()
 				}
 			}
 		}
+
+		//====================  COLISION JUGADOR--ISLA1   ==================//
+		al_draw_line(1300, 693, 1562, 492, negro, 3);
+		al_draw_line(1300, 693, 1300, 756, negro, 3);
+		al_draw_line(1300, 756, 1462, 893, negro, 3);
+		al_draw_line(1462, 893, 1632, 723, negro, 3);
+		al_draw_line(1632, 723, 1642, 510, negro, 3);
+		al_draw_line(1562, 492, 1642, 510, negro, 3);
+
+		
+
+
+
+
+
+
+
+
+
+
 		//====================	FRAME FUEGO	====================//
 
 		al_draw_bitmap(circulo_, 914, 933, 0);
