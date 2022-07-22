@@ -8,6 +8,11 @@
 #include <allegro5/allegro_primitives.h>
 #include <Windows.h>
 #include <math.h>
+#include "Imagenes.h"
+
+
+
+
 #define speed_x 4
 #define speed_y 4
 #define pi 3.141592
@@ -28,7 +33,7 @@ int main()
 		int pos_y;
 		int vel_x;
 		int vel_y;
-		int ndisparos;
+		int ndisparos = 0;
 
 	}enem[max_enemy];
 
@@ -76,57 +81,9 @@ int main()
 	float pos_x_bala2 = 1;
 	float x = 800, y = 600;
 	int j;
+	int a = 0;
 
-	const char* fuego1 = "Imagenes/Frame/fuego1.png";
-	const char* fuego2 = "Imagenes/Frame/fuego2.png";
-	const char* fuego3 = "Imagenes/Frame/fuego3.png";
-	const char* fuego4 = "Imagenes/Frame/fuego4.png";
-	const char* fuego5 = "Imagenes/Frame/fuego5.png";
 	
-	const char* p0 = "Imagenes/Rotaciones/A0.png";
-	const char* p1 = "Imagenes/Rotaciones/A1.png";
-	const char* p2 = "Imagenes/Rotaciones/A2.png";
-	const char* p3 = "Imagenes/Rotaciones/A3.png";
-	const char* p4 = "Imagenes/Rotaciones/A4.png";
-	const char* p5 = "Imagenes/Rotaciones/A5.png";
-	const char* p6 = "Imagenes/Rotaciones/A6.png";
-	const char* p7 = "Imagenes/Rotaciones/A7.png";
-	const char* p8 = "Imagenes/Rotaciones/A8.png";
-	const char* p9 = "Imagenes/Rotaciones/A9.png";
-	const char* p10 = "Imagenes/Rotaciones/A10.png";
-	const char* p11 = "Imagenes/Rotaciones/A11.png";
-	const char* p12 = "Imagenes/Rotaciones/A12.png";
-	const char* p13 = "Imagenes/Rotaciones/A13.png";
-	const char* p14 = "Imagenes/Rotaciones/A14.png";
-	const char* p15 = "Imagenes/Rotaciones/A15.png";
-
-	const char* hitbox1 = "Imagenes/Rotaciones/hitbox.png";
-
-	const char* bala_arriba = "Imagenes/Rotaciones_bala/BalaArriba.png";
-	const char* bala22 = "Imagenes/Rotaciones_bala/bala 22.png";
-	const char* bala44 = "Imagenes/Rotaciones_bala/bala 44.png";
-	const char* bala68 = "Imagenes/Rotaciones_bala/bala 66.png";
-	const char* bala_abajo = "Imagenes/Rotaciones_bala/BalaAbajo.png";
-	const char* bala112 = "Imagenes/Rotaciones_bala/bala 112.png";
-	const char* bala134 = "Imagenes/Rotaciones_bala/bala 134.png";
-	const char* bala156 = "Imagenes/Rotaciones_bala/bala 156.png";
-	const char* bala_derecha = "Imagenes/Rotaciones_bala/BalaDerecha.png";
-	const char* bala202 = "Imagenes/Rotaciones_bala/bala 202.png";
-	const char* bala224 = "Imagenes/Rotaciones_bala/bala 224.png";
-	const char* bala246 = "Imagenes/Rotaciones_bala/bala 246.png";
-	const char* bala_izquierda = "Imagenes/Rotaciones_bala/BalaIzquierda.png";
-	const char* bala292 = "Imagenes/Rotaciones_bala/bala 292.png";
-	const char* bala314 = "Imagenes/Rotaciones_bala/bala 314.png";
-	const char* bala336 = "Imagenes/Rotaciones_bala/bala 336.png";
-	const char* nulo = "Imagenes/Rotaciones_bala/+.png";
-
-	const char* bala1_4 = "Imagenes/Recarga/bala 1,4.png";
-	const char* bala2_4 = "Imagenes/Recarga/bala 2,4.png";
-	const char* bala3_4 = "Imagenes/Recarga/bala 3,4.png";
-	const char* bala_completa = "Imagenes/Recarga/bala completa.png";
-	const char* circulo = "Imagenes/Recarga/circulo.png";
-	const char* isla_ = "Imagenes/Isla.png";
-	const char* enemy1_ = "Imagenes/Enemigos/enemy.png";
 	if (!al_init())
 	{
 		al_show_native_message_box(NULL, "ERROR CRITICO", "ERROR: 404", "No se pudo cargar correctamente la libreria alelgro", NULL, ALLEGRO_MESSAGEBOX_ERROR);
@@ -394,9 +351,14 @@ int main()
 		}
 
 		//================= CREACION DE LAS BALAS ENEMIGAS  =======================//
+		if (contt++ > 30)
+		{
+			aux = 0; contt = 0;
+		}
 		
 		for (j = 1; j <= num_enem; j++)
 		{
+		
 			if (segundo > 2 && aux == 0)
 			{
 				if (enem[j].ndisparos <= max_disparos)
@@ -406,33 +368,24 @@ int main()
 					disparos[enem[j].ndisparos].y = enem[j].pos_y + 39;
 					disparos[enem[j].ndisparos].vel_x = 20;
 					disparos[enem[j].ndisparos].vel_y = 0;
-
-					aux = 1;
-				}
-
-			}
-			if (contt++ > 30)
-			{
-				aux = 0; contt = 0;
-			}
-		}
-		
-		for (j = 1; j <= num_enem; j++)
-		{
-			if (enem[j].ndisparos > 0 && enem[j].ndisparos < max_disparos)
-			{
-				for (i = 2; i <= enem[j].ndisparos; i++)
-				{
-					disparos[i].x = disparos[i].x + disparos[i].vel_x;
-
-					if (disparos[i].x >= enem[j].pos_x && disparos[i].x <= 1980)
+					if (j == num_enem)
 					{
-						al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, 0);
+						aux = 1;
 					}
+					
 				}
 			}
 		}
+		for (i = 1; i < max_disparos; i++)
+		{
+			disparos[i].x = disparos[i].x + disparos[i].vel_x;
+			if (disparos[i].x <= 1980)
+			{
+				al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, 0);
+			}
+		}
 
+		
 		//==================   COLISION BALA-----ENEMIGO   =================//
 		if (cant_disparos > 0)
 		{
@@ -461,7 +414,7 @@ int main()
 
 		//RETORNA: El entero;
 
-		for (i = 1; i <= enem[num_enem].ndisparos; i++)
+		for (i = 1; i <= enem[num_enem-1].ndisparos; i++)
 		{
 			if (omega[cont] == 0)
 			{
