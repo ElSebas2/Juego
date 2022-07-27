@@ -1,0 +1,12 @@
+#define speed_x 4
+#define speed_y 4
+#define pi 3.141592
+#define speed_bala 20
+#define n_balas 2
+#define f pi/180
+#define max_disparos 20
+#define max_disparos_ply 3
+#define pos 16
+#define vel_enemy 5
+#define max_enemy 10
+#define cant_vida 0

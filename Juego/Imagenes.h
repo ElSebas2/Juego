@@ -48,3 +48,14 @@ const char* bala_completa = "Imagenes/Recarga/bala completa.png";
 const char* circulo = "Imagenes/Recarga/circulo.png";
 const char* isla_ = "Imagenes/Isla.png";
 const char* enemy1_ = "Imagenes/Enemigos/enemy.png"; 
+const char* tabla_puntaje = "Imagenes/puntaje.png";
+const char* rachas = "Imagenes/racha.png";
+
+const char* vida1 = "Imagenes/Vida/Vida1.png";
+const char* vida2 = "Imagenes/Vida/Vida2.png";
+const char* vida3 = "Imagenes/Vida/Vida3.png";
+const char* vida4 = "Imagenes/Vida/Vida4.png";
+const char* vida5 = "Imagenes/Vida/Vida5.png";
+const char* vida6 = "Imagenes/Vida/Vida6.png";
+
+
