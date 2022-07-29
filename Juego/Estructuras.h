@@ -26,7 +26,7 @@ struct bala_player
 
 struct jugador
 {
-	int vida;
+	int vida = 0;
 };
 typedef jugador jugador_;
 
