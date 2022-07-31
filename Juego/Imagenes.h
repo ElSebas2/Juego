@@ -58,4 +58,8 @@ const char* vida4 = "Imagenes/Vida/Vida4.png";
 const char* vida5 = "Imagenes/Vida/Vida5.png";
 const char* vida6 = "Imagenes/Vida/Vida6.png";
 
+const char* menu1 = "Imagenes/Menu/menu.jpg";
+const char* menu_play = "Imagenes/Menu/menu_play.jpg";
+const char* menu_high = "Imagenes/Menu/menu_highs.jpg";
+
 
