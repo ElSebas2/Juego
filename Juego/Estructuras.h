@@ -1,5 +1,6 @@
 struct enemy_
 {
+	int vida = 0;
 	int pos_x;
 	int pos_y;
 	int vel_x;

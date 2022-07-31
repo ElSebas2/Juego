@@ -5,6 +5,8 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <Windows.h>
 #include <math.h>
 #include <stdlib.h>
@@ -19,8 +21,6 @@ int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct ene
 int main()
 {
 	bool play = false;
-	jugador vidas;
-	jugador_ jugador1 = {};
 	int cant_impactos = 0;
 	int puntajes = 0;
 	int rachas_ = 1;
@@ -56,8 +56,6 @@ int main()
 
 	int n = 0;
 
-	const char* puntaje = "Puntaje %d";
-
 	al_init();
 	al_install_keyboard();
 	al_init_image_addon();
@@ -65,9 +63,25 @@ int main()
 	al_init_ttf_addon();
 	al_install_mouse();
 	al_init_primitives_addon();
+	al_install_audio();
+	al_init_acodec_addon();
 
 	int ancho = GetSystemMetrics(SM_CXSCREEN);
 	int alto = GetSystemMetrics(SM_CYSCREEN);
+
+	ALLEGRO_SAMPLE* disparo_ = NULL;
+	ALLEGRO_SAMPLE* musicas = NULL;
+	ALLEGRO_SAMPLE_INSTANCE* instans = NULL;
+
+	al_reserve_samples(10);
+
+	musicas = al_load_sample(song);
+	disparo_ = al_load_sample(disparos_);
+	instans = al_create_sample_instance(musicas);
+	al_set_sample_instance_playmode(instans, ALLEGRO_PLAYMODE_LOOP);
+
+	al_attach_sample_instance_to_mixer(instans, al_get_default_mixer());
+
 
 	ALLEGRO_EVENT_QUEUE* cola = al_create_event_queue();
 	ALLEGRO_BITMAP* fondo = al_load_bitmap("Imagenes/fondo.jpg");
@@ -90,6 +104,8 @@ int main()
 	ALLEGRO_TIMER* recarga = al_create_timer(1.0);
 	ALLEGRO_FONT* letra = al_load_font("Sernes-Light.otf", 30, 0);
 	ALLEGRO_FONT* letra1 = al_load_font("Sernes-Light.otf", 15, 0);
+
+		
 
 
 
@@ -133,7 +149,9 @@ int main()
 	ALLEGRO_EVENT Evento;
 	while (true)
 	{
+		al_play_sample_instance(instans);
 		al_wait_for_event(cola, &Evento);
+
 		if (play == false)
 		{
 			al_draw_bitmap(menu[n], 0, 0, 0);
@@ -247,6 +265,7 @@ int main()
 						disparos_ply[cant_disparos].vel_x = speed_bala * cos(omega[cont1[cant_disparos]] * f);
 						disparos_ply[cant_disparos].vel_y = speed_bala * sin(omega[cont1[cant_disparos]] * f);
 						cant_disparos++;
+						al_play_sample(disparo_, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
 
 					}
 
@@ -389,7 +408,7 @@ int main()
 			//==================   COLISION BALA-----ENEMIGO   =================//
 			if (cant_disparos > 0)
 			{
-				for (k = 1; k < max_enemy; k++)
+				for (k = 1; k < num_enem; k++)
 				{
 					for (i = 0; i <= cant_disparos; i++)
 					{
@@ -397,7 +416,13 @@ int main()
 						{
 							if (disparos_ply[i].pos_y >= enem[k].pos_y && disparos_ply[i].pos_y <= enem[k].pos_y + 157)
 							{
-								cont1[i] = 16;
+								enem[k].vida++;
+								disparos_ply[i].pos_x = 1980;
+								if (enem[k].vida >= 3)
+								{
+									printf("XD");
+									flag[k] = 1;
+								}
 							}
 						}
 					}
