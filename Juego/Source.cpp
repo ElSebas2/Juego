@@ -20,8 +20,9 @@ int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct ene
 
 int main()
 {
+	int llaves = 1;
+	int fpss = 0;
 	bool play = false;
-	int cant_impactos = 0;
 	int puntajes = 0;
 	int rachas_ = 1;
 	int vida_player = 0;
@@ -31,7 +32,6 @@ int main()
 	int num_enem = 0;
 	int contt = 1;
 	int contt_ = 1;
-	bool fuego = false;
 	bool freno = true;
 	bool disparo = false;
 	int x1, y1;
@@ -46,11 +46,9 @@ int main()
 	int	cont2 = 0;
 	int cant_disparos = 0;
 	int enemy_x = 200, enemy_y = 1080;
-	float pos_x_bala[16];
-	float pos_y_bala[16];
-	float segundo = 0;
-	float pos_y_bala2 = 1;
-	float pos_x_bala2 = 1;
+	int llave_x = 0;
+	int llave_y = 0;
+	int segundo = 0;
 	float x = 300, y = 600;
 	int j;
 
@@ -100,10 +98,12 @@ int main()
 	ALLEGRO_BITMAP* menu[3] = { al_load_bitmap(menu1),al_load_bitmap(menu_play),al_load_bitmap(menu_high) };
 	ALLEGRO_COLOR negro = al_map_rgb(0, 0, 0);
 	ALLEGRO_DISPLAY* ventana = al_create_display(ancho, alto);
-	ALLEGRO_TIMER* seg = al_create_timer(1 / 2.0);
+	ALLEGRO_TIMER* seg = al_create_timer(1.0);
+	ALLEGRO_TIMER* fps = al_create_timer(1 / 2.0);
 	ALLEGRO_TIMER* recarga = al_create_timer(1.0);
 	ALLEGRO_FONT* letra = al_load_font("Sernes-Light.otf", 30, 0);
 	ALLEGRO_FONT* letra1 = al_load_font("Sernes-Light.otf", 15, 0);
+	ALLEGRO_BITMAP* llave = al_load_bitmap(llave_);
 
 		
 
@@ -114,6 +114,7 @@ int main()
 	al_register_event_source(cola, al_get_keyboard_event_source());
 	al_register_event_source(cola, al_get_timer_event_source(seg));
 	al_register_event_source(cola, al_get_timer_event_source(recarga));
+	al_register_event_source(cola, al_get_timer_event_source(fps));
 	al_register_event_source(cola, al_get_mouse_event_source());
 	al_start_timer(seg);
 	al_start_timer(recarga);
@@ -143,8 +144,8 @@ int main()
 	}
 	for (k = 0; k <= 15; k++)
 	{
-		vel_y[k] = (speed_y * cos(omega[k] * f));
-		vel_x[k] = (speed_x * sin(omega[k] * f));
+		vel_y[k] = (speed * cos(omega[k] * f));
+		vel_x[k] = (speed * sin(omega[k] * f));
 	}
 	ALLEGRO_EVENT Evento;
 	while (true)
@@ -193,6 +194,17 @@ int main()
 			al_draw_bitmap(fondo, 0, 0, 0);
 			al_draw_bitmap(isla, 1300, 500, 0);
 			al_draw_bitmap(isla_2, 1000, 200, 0);
+			if (Evento.type == ALLEGRO_EVENT_TIMER)
+			{
+
+				if (Evento.timer.source == fps)
+				{
+					fpss = fpss + 1;
+				}
+			}
+
+
+
 			if (Evento.type == ALLEGRO_EVENT_KEY_DOWN)
 			{
 				if (Evento.keyboard.keycode == ALLEGRO_KEY_UP)
@@ -331,7 +343,7 @@ int main()
 
 				if (Evento.timer.source == seg)
 				{
-					segundo = segundo + 0.1;
+					segundo = segundo +1;
 				}
 			}
 
@@ -371,6 +383,7 @@ int main()
 			if (contt++ > 30)
 			{
 				aux = 0; contt = 0;
+
 			}
 			for (j = 1; j <= num_enem; j++)
 			{
@@ -399,8 +412,10 @@ int main()
 				disparos[i].x = disparos[i].x + disparos[i].vel_x;
 				if (disparos[i].x <= 1980)
 				{
-					al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, flag[i]);
-
+					if (flag[i] == 0)
+					{
+						al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, flag[i]);
+					}
 				}
 			}
 
@@ -408,7 +423,7 @@ int main()
 			//==================   COLISION BALA-----ENEMIGO   =================//
 			if (cant_disparos > 0)
 			{
-				for (k = 1; k < num_enem; k++)
+				for (k = 1; k < num_enem+1; k++)
 				{
 					for (i = 0; i <= cant_disparos; i++)
 					{
@@ -417,20 +432,157 @@ int main()
 							if (disparos_ply[i].pos_y >= enem[k].pos_y && disparos_ply[i].pos_y <= enem[k].pos_y + 157)
 							{
 								enem[k].vida++;
-								disparos_ply[i].pos_x = 1980;
+								puntajes = puntajes + 100 * rachas_;
+								if (rachas_ < 6)
+								{
+									rachas_++;
+								}
+
 								if (enem[k].vida >= 3)
 								{
-									printf("XD");
 									flag[k] = 1;
 								}
+								disparos_ply[i].pos_y = 5000;
 							}
 						}
 					}
 				}
 
 			}
+			//////////////////////////////============= GENERACION DE ITEM PARA CURAR=========================///////////////////
 
+			if (segundo > 10 && segundo != 0 && llaves == 1)
+			{
+				llave_x = 100 + rand() % 1500;
+				llave_y = 100 + rand() % 800;
+				llaves = 0;
+			}	
+			if (llaves == 0)
+			{
+				if (segundo <= 150)
+				{
+					if (n != 0)
+					{
+						al_draw_bitmap(llave, llave_x, llave_y, n);
+					}
+				}
+					
+			}
 
+			///////////////////////////================ COLISION ITEM PARA CURAR Y JUGADOR =============//////////////////
+			if (omega[cont] == 0)
+			{
+				if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x	 <= x + 122.5 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] == 180)
+			{
+				if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x <= x + 122.5 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y <= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] == 90)
+			{
+				if (llave_x + 100<= x + 100 + 100 * sin(omega[cont] * f) && llave_x  >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+
+					if (llave_y + 100 <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] == 270)
+			{
+				if (llave_x + 100 >= x + 100 + 100 * sin(omega[cont] * f) && llave_x <= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y + 100 <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] > 0 && omega[cont] < 90)
+			{
+				if (llave_x + 100 <= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] > 90 && omega[cont] < 180)
+			{
+				if (llave_x + 100 <= x + 100 + 100 * sin(omega[cont] * f) && llave_x >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y + 100 <= y + 100 - 100 * cos(omega[cont] * f) && llave_y >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] > 180 && omega[cont] < 270)
+			{
+				if (llave_x >= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 <= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y + 100 <= y + 100 - 100 * cos(omega[cont] * f) && llave_y >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
+			if (omega[cont] > 270)
+			{
+				if (llave_x >= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 <= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						if (vida_player >= 2)
+						{
+							vida_player = vida_player - 2;
+						}
+						n = 0;
+					}
+				}
+			}
 
 			/*
 				//======================== VIDA JUGADOR  =========================//
@@ -563,16 +715,6 @@ int main()
 			}
 
 
-
-
-
-
-
-
-
-
-
-
 			//====================  COLISION JUGADOR--ISLA1   ==================//
 			al_draw_line(1300, 693, 1562, 492, negro, 3);
 			al_draw_line(1300, 693, 1300, 756, negro, 3);
@@ -601,9 +743,6 @@ int main()
 		al_flip_display();
 	}
 }
-
-
-
 
 
 /*struct bala_* colisiones_jugador(int num_enem, int x, int y, int i, int cont, struct enemy_ enem[max_enemy], struct bala_ disparos[max_disparos], int omega[16])

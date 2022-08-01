@@ -1,5 +1,4 @@
-#define speed_x 4
-#define speed_y 4
+#define speed 4
 #define pi 3.141592
 #define speed_bala 20
 #define n_balas 2

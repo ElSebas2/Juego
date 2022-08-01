@@ -65,4 +65,6 @@ const char* menu_high = "Imagenes/Menu/menu_highs.jpg";
 const char* disparos_ = "Musica/disparo.ogg";
 const char* song = "Musica/song.ogg";
 
+const char* llave_ = "Imagenes/llave.png";
+
 
