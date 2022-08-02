@@ -67,4 +67,10 @@ const char* song = "Musica/song.ogg";
 
 const char* llave_ = "Imagenes/llave.png";
 
+const char* avion = "Imagenes/Enemigos/avion.png";
+const char* avion1 = "Imagenes/Enemigos/avion1.png";
+const char* avion2 = "Imagenes/Enemigos/avion2.png";
+const char* avion3 = "Imagenes/Enemigos/avion3.png";
+
+const char* negro_ = "Imagenes/matriz.jpg";
 

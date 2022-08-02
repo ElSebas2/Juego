@@ -23,12 +23,28 @@ struct bala_player
 	int pos_y;
 	int vel_x;
 	int vel_y;
-}disparos_ply[max_disparos_ply];
+};
 
 struct jugador
 {
+	int x = 700;
+	int y = 700;
+	int vel_x;
+	int vel_y;
 	int vida = 0;
-};
+	struct bala_player disparos_ply[max_disparos_ply];
+}player;
 typedef jugador jugador_;
+
+struct jefe
+{
+	int vida = 10;
+	int pos_x;
+	int pos_y;
+	int vel_x;
+	int vel_y;
+	int ndisparos;
+
+}boss;
 
 

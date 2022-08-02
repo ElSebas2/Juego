@@ -4,8 +4,9 @@
 #define n_balas 2
 #define f pi/180
 #define max_disparos 20
-#define max_disparos_ply 3
-#define pos 16
+#define max_disparos_ply 15
 #define vel_enemy 5
 #define max_enemy 10
 #define cant_vida 0
+#define SIZE 90 
+#define boss_speed 15
