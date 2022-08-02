@@ -20,6 +20,7 @@ int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct ene
 
 int main()
 {
+	int choque[16] = { 0 };
 	int llaves = 1;
 	int fpss = 0;
 	bool play = false;
@@ -49,9 +50,8 @@ int main()
 	int llave_x = 0;
 	int llave_y = 0;
 	int segundo = 0;
-	float x = 300, y = 600;
+	float x = 700, y = 700;
 	int j;
-
 	int n = 0;
 
 	al_init();
@@ -150,7 +150,7 @@ int main()
 	ALLEGRO_EVENT Evento;
 	while (true)
 	{
-		al_play_sample_instance(instans);
+		//al_play_sample_instance(instans);
 		al_wait_for_event(cola, &Evento);
 
 		if (play == false)
@@ -230,15 +230,18 @@ int main()
 					if (cont < 0)
 					{
 						cont = 15;
-
 					}
 				}
 			}
 			/*//==============     AJUSTAR VELOCIDAD PARA LAS POSICIONES    ================================//*/
 			if (freno == false)
 			{
-				y = y - vel_y[cont];
-				x = x + vel_x[cont];
+				if (choque[cont] == 0)
+				{
+					y = y - vel_y[cont];
+					x = x + vel_x[cont];
+
+				}
 			}
 			//================== CARGAR POSICIONES DE LAS BALAS    ==============================//
 
@@ -375,6 +378,17 @@ int main()
 						{
 							al_draw_bitmap(enemy1, enem[i].pos_x, enem[i].pos_y, flag[i]);
 						}
+						else
+						{
+							if (flag[i] != 0)
+							{
+								enem[i].pos_x = -150;
+								enem[i].pos_y = -150;
+								enem[i].vel_x = 0;
+								enem[i].vel_y = 0;
+								enem[i].ndisparos = 0;
+							}
+						}
 					}
 				}
 			}
@@ -398,6 +412,13 @@ int main()
 							disparos[enem[j].ndisparos].x = enem[j].pos_x + 97;
 							disparos[enem[j].ndisparos].y = enem[j].pos_y + 39;
 							disparos[enem[j].ndisparos].vel_x = 20;
+							disparos[enem[j].ndisparos].vel_y = 0;
+						}
+						else
+						{
+							disparos[enem[j].ndisparos].x = 0;
+							disparos[enem[j].ndisparos].y =0;
+							disparos[enem[j].ndisparos].vel_x = 0;
 							disparos[enem[j].ndisparos].vel_y = 0;
 						}
 						if (j == num_enem)
@@ -451,10 +472,10 @@ int main()
 			}
 			//////////////////////////////============= GENERACION DE ITEM PARA CURAR=========================///////////////////
 
-			if (segundo > 10 && segundo != 0 && llaves == 1)
+			if (segundo > 5 && segundo != 0 && llaves == 1)
 			{
-				llave_x = 100 + rand() % 1500;
-				llave_y = 100 + rand() % 800;
+				llave_x = 500;
+				llave_y = 500;
 				llaves = 0;
 			}	
 			if (llaves == 0)
@@ -470,116 +491,118 @@ int main()
 			}
 
 			///////////////////////////================ COLISION ITEM PARA CURAR Y JUGADOR =============//////////////////
-			if (omega[cont] == 0)
+			if (n != 0)
 			{
-				if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x	 <= x + 122.5 - 100 * sin(omega[cont] * f))
+				if (omega[cont] == 0)
 				{
-					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x <= x + 122.5 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y + 100 >= y + 100 - 100 * cos(omega[cont] * f) && llave_y <= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] == 180)
-			{
-				if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x <= x + 122.5 - 100 * sin(omega[cont] * f))
+				if (omega[cont] == 180)
 				{
-					if (llave_y <= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x + 100 >= x + 80 + 100 * sin(omega[cont] * f) && llave_x <= x + 122.5 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y <= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] == 90)
-			{
-				if (llave_x + 100<= x + 100 + 100 * sin(omega[cont] * f) && llave_x  >= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] == 90)
 				{
-
-					if (llave_y + 100 <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
+					if (llave_x <= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 >= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] == 270)
-			{
-				if (llave_x + 100 >= x + 100 + 100 * sin(omega[cont] * f) && llave_x <= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] == 270)
 				{
-					if (llave_y + 100 <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
+					if (llave_x >= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 <= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y + 100 <= y + 122.5 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 80 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] > 0 && omega[cont] < 90)
-			{
-				if (llave_x + 100 <= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 >= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] > 0 && omega[cont] < 90)
 				{
-					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x <= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 >= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y + 100 >= y + 100 - 100 * cos(omega[cont] * f) && llave_y <= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] > 90 && omega[cont] < 180)
-			{
-				if (llave_x + 100 <= x + 100 + 100 * sin(omega[cont] * f) && llave_x >= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] > 90 && omega[cont] < 180)
 				{
-					if (llave_y + 100 <= y + 100 - 100 * cos(omega[cont] * f) && llave_y >= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x <= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 >= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y <= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] > 180 && omega[cont] < 270)
-			{
-				if (llave_x >= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 <= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] > 180 && omega[cont] < 270)
 				{
-					if (llave_y + 100 <= y + 100 - 100 * cos(omega[cont] * f) && llave_y >= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x + 100 >= x + 100 + 100 * sin(omega[cont] * f) && llave_x <= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y <= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 >= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
-			}
-			if (omega[cont] > 270)
-			{
-				if (llave_x >= x + 100 + 100 * sin(omega[cont] * f) && llave_x + 100 <= x + 100 - 100 * sin(omega[cont] * f))
+				if (omega[cont] > 270)
 				{
-					if (llave_y >= y + 100 - 100 * cos(omega[cont] * f) && llave_y + 100 <= y + 100 + 100 * cos(omega[cont] * f))
+					if (llave_x + 100 >= x + 100 + 100 * sin(omega[cont] * f) && llave_x <= x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (vida_player >= 2)
+						if (llave_y + 100 >= y + 100 - 100 * cos(omega[cont] * f) && llave_y <= y + 100 + 100 * cos(omega[cont] * f))
 						{
-							vida_player = vida_player - 2;
+							if (vida_player >= 2)
+							{
+								vida_player = vida_player - 2;
+							}
+							n = 0;
 						}
-						n = 0;
 					}
 				}
 			}
@@ -592,6 +615,7 @@ int main()
 
 
 				//==================== COLISION JUGADOR-----ENEMIGOS   ======================//
+
 			flag[i] = col_jugador__enemigo(num_enem, x, y, i, cont, enem, disparos, omega, flag);
 
 
@@ -713,6 +737,163 @@ int main()
 					}
 				}
 			}
+
+
+			//////////////////////====================== COLISION ===============================//////////////////////
+
+			al_draw_filled_rectangle(500, 500, 600, 600, negro);
+
+			if (omega[cont] == 0)
+			{
+				if (600 >= x + 80 + 100 * sin(omega[cont] * f) && 500 <= x + 122.5 - 100 * sin(omega[cont] * f))
+				{
+					if (600 >= y + 100 - 100 * cos(omega[cont] * f) && 500 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+					
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+		
+			if (omega[cont] == 180)
+			{
+				if (600 >= x + 80 + 100 * sin(omega[cont] * f) && 500 <= x + 122.5 - 100 * sin(omega[cont] * f))
+				{
+					if (500 <= y + 100 - 100 * cos(omega[cont] * f) && 600 >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] == 90)
+			{
+				if (500 <= x + 100 + 100 * sin(omega[cont] * f) && 600 >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (500 <= y + 122.5 - 100 * cos(omega[cont] * f) && 600 >= y + 80 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] == 270)
+			{
+				if (600 >= x + 100 + 100 * sin(omega[cont] * f) && 600 <= x + 200 - 100 * sin(omega[cont] * f))
+				{
+					if (500 <= y + 122.5 - 100 * cos(omega[cont] * f) && 600 >= y + 80 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] > 0 && omega[cont] < 90)
+			{
+				if (500 <= x + 100 + 100 * sin(omega[cont] * f) && 600 >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (600 >= y + 100 - 100 * cos(omega[cont] * f) && 500 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] > 90 && omega[cont] < 180)
+			{
+				if (500 <= x + 100 + 100 * sin(omega[cont] * f) && 600 >= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (500 <= y + 100 - 100 * cos(omega[cont] * f) && 600 >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] > 180 && omega[cont] < 270)
+			{
+				if (600 >= x + 100 + 100 * sin(omega[cont] * f) && 500 <= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (500 <= y + 100 - 100 * cos(omega[cont] * f) && 600 >= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+			if (omega[cont] > 270)
+			{
+				if (600 >= x + 100 + 100 * sin(omega[cont] * f) && 500 <= x + 100 - 100 * sin(omega[cont] * f))
+				{
+					if (600 >= y + 100 - 100 * cos(omega[cont] * f) && 500 <= y + 100 + 100 * cos(omega[cont] * f))
+					{
+						choque[cont] = 1;
+					}
+					else
+					{
+						choque[cont] = 0;
+					}
+				}
+				else
+				{
+					choque[cont] = 0;
+				}
+			}
+
+
+
+
+
 
 
 			//====================  COLISION JUGADOR--ISLA1   ==================//
@@ -844,11 +1025,11 @@ int main()
 
 int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct enemy_ enem[max_enemy], struct bala_ disparos[max_disparos], int omega[16], int flag[max_enemy])
 {
-	for (i = 1; i <= num_enem; i++)
+	for (i = 0; i <= num_enem; i++)
 	{
 		if (omega[cont] == 0)
 		{
-			if (enem[i].pos_x + 95 >= x + 80 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 58 <= x + 122.5 - 100 * sin(omega[cont] * f))
+			if (enem[i].pos_x + 58 >= x + 80 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 95 <= x + 122.5 - 100 * sin(omega[cont] * f))
 			{
 
 				if (enem[i].pos_y >= y + 100 - 100 * cos(omega[cont] * f) && enem[i].pos_y <= y + 100 + 100 * cos(omega[cont] * f))
@@ -879,7 +1060,7 @@ int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct ene
 		}
 		if (omega[cont] == 270)
 		{
-			if (enem[i].pos_x + 58 >= x + 100 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 95 <= x + 100 - 100 * sin(omega[cont] * f))
+			if (enem[i].pos_x + 95 >= x + 100 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 58 <= x + 200 - 100 * sin(omega[cont] * f))
 			{
 				if (enem[i].pos_y <= y + 122.5 - 100 * cos(omega[cont] * f) && enem[i].pos_y >= y + 80 + 100 * cos(omega[cont] * f))
 				{
@@ -910,7 +1091,7 @@ int col_jugador__enemigo(int num_enem, int x, int y, int i, int cont, struct ene
 		}
 		if (omega[cont] > 180 && omega[cont] < 270)
 		{
-			if (enem[i].pos_x + 58 >= x + 100 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 95 <= x + 100 - 100 * sin(omega[cont] * f))
+			if (enem[i].pos_x + 95 >= x + 100 + 100 * sin(omega[cont] * f) && enem[i].pos_x + 58 <= x + 100 - 100 * sin(omega[cont] * f))
 			{
 				if (enem[i].pos_y <= y + 100 - 100 * cos(omega[cont] * f) && enem[i].pos_y >= y + 100 + 100 * cos(omega[cont] * f))
 				{
