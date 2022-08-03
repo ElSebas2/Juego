@@ -34,13 +34,13 @@ struct jugador
 	int vida = 0;
 	struct bala_player disparos_ply[max_disparos_ply];
 }player;
-typedef jugador jugador_;
+
 
 struct jefe
 {
 	int vida = 10;
-	int pos_x;
-	int pos_y;
+	int pos_x = 1980;
+	int pos_y = player.y;
 	int vel_x;
 	int vel_y;
 	int ndisparos;
