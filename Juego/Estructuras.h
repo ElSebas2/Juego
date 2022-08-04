@@ -41,10 +41,15 @@ struct jefe
 	int vida = 10;
 	int pos_x = 1980;
 	int pos_y = player.y;
-	int vel_x;
-	int vel_y;
-	int ndisparos;
+	int ndisparos = 1;
 
 }boss;
 
+struct balas_boss
+{
+	int x;
+	int y;
+	int vel_x;
+	int vel_y;
+}disparos_boss[max_disparos];
 

@@ -24,7 +24,8 @@ int main()
 {
 	FILE *fmapeado;
 	
-	
+	int auxxx = 0;
+	int a = 0;
 	int conta = 3;
 	int contx1 = 0;
 	int dx1[75];
@@ -826,7 +827,7 @@ int main()
 			//////////////////////====================== COLISION ===============================//////////////////////
 
 			al_draw_filled_rectangle(500, 500, 600, 600, negro);
-			//for (i = 0; i < contx1; i++)
+			for (i = 0; i < contx1; i++)
 			{
 				if (omega[cont] == 0)
 				{
@@ -840,9 +841,9 @@ int main()
 				}
 				if (omega[cont] == 180)
 				{
-					if (600 >= player.x + 80 + 100 * sin(omega[cont] * f) && 500 <= player.x + 122.5 - 100 * sin(omega[cont] * f))
+					if (dx1[i] + 22 >= player.x + 80 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 122.5 - 100 * sin(omega[cont] * f))
 					{
-						if (500 <= player.y + 100 - 100 * cos(omega[cont] * f) && 600 >= player.y + 100 + 100 * cos(omega[cont] * f))
+						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -852,9 +853,9 @@ int main()
 				}
 				if (omega[cont] == 90)
 				{
-					if (500 <= player.x + 100 + 100 * sin(omega[cont] * f) && 600 >= player.x + 100 - 100 * sin(omega[cont] * f))
+					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (500 <= player.y + 122.5 - 100 * cos(omega[cont] * f) && 600 >= player.y + 80 + 100 * cos(omega[cont] * f))
+						if (dy1[i] <= player.y + 122.5 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 80 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -864,9 +865,9 @@ int main()
 				}
 				if (omega[cont] == 270)
 				{
-					if (600 >= player.x + 100 + 100 * sin(omega[cont] * f) && 600 <= player.x + 200 - 100 * sin(omega[cont] * f))
+					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 200 - 100 * sin(omega[cont] * f))
 					{
-						if (500 <= player.y + 122.5 - 100 * cos(omega[cont] * f) && 600 >= player.y + 80 + 100 * cos(omega[cont] * f))
+						if (dy1[i] <= player.y + 122.5 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 80 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -876,9 +877,9 @@ int main()
 				}
 				if (omega[cont] > 0 && omega[cont] < 90)
 				{
-					if (500 <= player.x + 100 + 100 * sin(omega[cont] * f) && 600 >= player.x + 100 - 100 * sin(omega[cont] * f))
+					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (600 >= player.y + 100 - 100 * cos(omega[cont] * f) && 500 <= player.y + 100 + 100 * cos(omega[cont] * f))
+						if (dy1[i] + 12 >= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] <= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -888,9 +889,9 @@ int main()
 				}
 				if (omega[cont] > 90 && omega[cont] < 180)
 				{
-					if (500 <= player.x + 100 + 100 * sin(omega[cont] * f) && 600 >= player.x + 100 - 100 * sin(omega[cont] * f))
+					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (500 <= player.y + 100 - 100 * cos(omega[cont] * f) && 600 >= player.y + 100 + 100 * cos(omega[cont] * f))
+						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -899,9 +900,9 @@ int main()
 				}
 				if (omega[cont] > 180 && omega[cont] < 270)
 				{
-					if (600 >= player.x + 100 + 100 * sin(omega[cont] * f) && 500 <= player.x + 100 - 100 * sin(omega[cont] * f))
+					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (500 <= player.y + 100 - 100 * cos(omega[cont] * f) && 600 >= player.y + 100 + 100 * cos(omega[cont] * f))
+						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -911,9 +912,9 @@ int main()
 				}
 				if (omega[cont] > 270)
 				{
-					if (600 >= player.x + 100 + 100 * sin(omega[cont] * f) && 500 <= player.x + 100 - 100 * sin(omega[cont] * f))
+					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
-						if (600 >= player.y + 100 - 100 * cos(omega[cont] * f) && 500 <= player.y + 100 + 100 * cos(omega[cont] * f))
+						if (dy1[i] + 12 >= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] <= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
 							choque[cont] = 1;
 						}
@@ -932,16 +933,15 @@ int main()
 			{
 				if (boss.pos_x > -200 && conta == 3)
 				{
-					conta = 3;
 					boss = movimiento(boss, player);
 				}
-				else if (boss.pos_x < -200)
+				if (boss.pos_x < -200 && conta == 3)
 				{
 					conta = 2;
 					boss.pos_y = -200;
 					boss.pos_x = player.x;
 				}
-				if (boss.pos_y < 1280 && conta == 2 )
+				if (boss.pos_y < 1280  && conta == 2 )
 				{
 					if (player.y > boss.pos_y)
 					{
@@ -949,12 +949,21 @@ int main()
 					}
 					boss.pos_y = boss.pos_y + boss_speed;
 				}
+				else if (boss.pos_y > 1180 && conta == 2)
+				{
+					conta = 3;
+					boss.pos_x = 1980;
+				    boss.pos_y = player.y;
+				}
 
-				al_draw_bitmap(jefe_[conta], boss.pos_x, boss.pos_y, 0);
+				//////////////////////======= CREAR BALAS ======////////
+				
+
 			}
 			al_draw_bitmap(circulo_, 50, 933, 0);
 			al_draw_bitmap(recargas, 50, 933, 0);
 			al_draw_bitmap(a0[cont], player.x, player.y, 0);
+			al_draw_bitmap(jefe_[conta], boss.pos_x, boss.pos_y, 0);
 			al_draw_bitmap(tabla_puntajes, 1200, 0, 0);
 			al_draw_bitmap(racha, 1385, 90, 0);
 			al_draw_textf(letra, negro, 1250, 30, 0, "Puntaje:    %d", puntajes);
