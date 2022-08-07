@@ -31,8 +31,6 @@ int main()
 	int a = 0;
 	int conta = 3;
 	int contx1 = 0;
-	int dx1[352];
-	int dy1[352];
 	int contx = 0;
 	int dx[15];
 	int dy[15];
@@ -129,16 +127,19 @@ int main()
 	fclose(fmapeado);
 	fclose(mini_matriz);
 
-
+	ALLEGRO_SAMPLE* ametralladora = NULL;
 	ALLEGRO_SAMPLE* disparo_ = NULL;
 	ALLEGRO_SAMPLE* musicas = NULL;
 	ALLEGRO_SAMPLE_INSTANCE* instans = NULL;
 
-	al_reserve_samples(10);
+	al_reserve_samples(15);
 
+	ametralladora = al_load_sample(disp_avion);
 	musicas = al_load_sample(song);
 	disparo_ = al_load_sample(disparos_);
 	instans = al_create_sample_instance(musicas);
+
+
 	al_set_sample_instance_playmode(instans, ALLEGRO_PLAYMODE_LOOP);
 
 	al_attach_sample_instance_to_mixer(instans, al_get_default_mixer());
@@ -233,11 +234,8 @@ int main()
 			{
 				if (mini_mapa[i][j] == 'C')
 				{
-					dx1[contx1] = (i * 11) + dx[k];
-					dy1[contx1] = (j * 6) + dy[k];
-					contx1++;
 					
-				}
+				}  
 			}
 		}
 	}
@@ -752,7 +750,6 @@ int main()
 
 			////////////////////////////////////////////////================= COLISION BALA ------ PLAYER ==================//////////////////////////////////////////////////////
 
-			al_draw_line(player.x + 80 + 100 * sin(omega[cont] * f), player.y + 100 - 100 * cos(omega[cont] * f),  player.x + 122.5 - 100 * sin(omega[cont] * f), player.y + 100 + 100 * cos(omega[cont] * f), negro, 15);
 			for (i = 1; i <= max_disparos; i++)
 			{
 				if (omega[cont] == 0)
@@ -905,7 +902,7 @@ int main()
 			///////////////////======================= CREAR JEFE ========================///////////////////////
 
 					
-			if (false)
+			if (true)
 			{
 				/// ============================ MOVIMIENTO ======================////////
 
@@ -935,33 +932,37 @@ int main()
 				}
 
 				/////////////////////////////////////========================== DISPAROS DEL BOSS =========================////////////////////////////
-				if (a++ > 10)
+				/*if (a++ > 10)
 				{
 					auxxx = 0; a = 0;
-
 				}
-
 				if (conta == 3)
 				{
 					if (boss.ndisparos <= boss_max_disparos && auxxx == 0)
 					{
 						boss.ndisparos++;
-						disparos_boss[boss.ndisparos].x = boss.pos_x + 64;
-						disparos_boss[boss.ndisparos].y = boss.pos_y + 43;
+						disparos_boss[boss.ndisparos].x = boss.pos_x + 100;
+						disparos_boss[boss.ndisparos].y = boss.pos_y + 33;
+						disparos_boss[boss.ndisparos].vel_x = 40;
+						disparos_boss[boss.ndisparos].vel_y = 0;
+						boss.ndisparos++;
+						disparos_boss[boss.ndisparos].x = boss.pos_x - 64;
+						disparos_boss[boss.ndisparos].y = boss.pos_y + 160;
 						disparos_boss[boss.ndisparos].vel_x = 40;
 						disparos_boss[boss.ndisparos].vel_y = 0;
 						auxxx = 1;
+						al_play_sample(ametralladora, 0.2, 0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0);
 					}
 				}
-							
+					
 				for (i = 1; i < boss.ndisparos; i++)
 				{
 					disparos_boss[i].x = disparos_boss[i].x - disparos_boss[i].vel_x;
 					if (disparos_boss[i].x >= 0)
 					{
-						al_draw_bitmap(bala1[15], disparos_boss[i].x, disparos_boss[i].y, 0);
+						al_draw_bitmap(bala1[8], disparos_boss[i].x, disparos_boss[i].y, 0);
 					}
-				}
+				}*/
 
 			}
 			al_draw_bitmap(circulo_, 50, 933, 0);
