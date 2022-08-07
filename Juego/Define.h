@@ -1,6 +1,6 @@
 #define speed 4
 #define pi 3.141592
-#define speed_bala 20
+#define speed_bala 30
 #define n_balas 2
 #define f pi/180
 #define max_disparos 20
@@ -8,5 +8,7 @@
 #define vel_enemy 5
 #define max_enemy 10
 #define cant_vida 0
-#define SIZE 90 
+#define SIZE 5 
+#define mini_SIZE 36 
 #define boss_speed 15
+#define boss_max_disparos 30

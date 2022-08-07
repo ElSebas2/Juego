@@ -22,19 +22,23 @@ int col_jugador__enemigo(int num_enem, struct jugador player, int i, int cont, s
 
 int main()
 {
-	FILE *fmapeado;
+	FILE* mini_matriz;
+	FILE* fmapeado;
 	
+	int angulo_y;
+	int angulo_x;
 	int auxxx = 0;
 	int a = 0;
 	int conta = 3;
 	int contx1 = 0;
-	int dx1[75];
-	int dy1[75];
+	int dx1[352];
+	int dy1[352];
 	int contx = 0;
 	int dx[15];
 	int dy[15];
 	bool auxx = false;
 	bool reloading = false;
+	char mini_mapa[mini_SIZE][mini_SIZE];
 	char mapa[SIZE][SIZE];
 	char basura;
 	int choque[16] = { 0 };
@@ -87,12 +91,33 @@ int main()
 	//ancho = 1080
 	//alto = 1980
 	
+	mini_matriz = fopen("isla.txt", "r");
 	fmapeado = fopen("mapa.txt", "r");
+
+	if (mini_matriz == NULL)
+	{
+		printf("Error");
+		return 0;
+	}
+
 	if (fmapeado == NULL)
 	{
 		printf("Error");
 		return 0;
 	}
+
+	for (i = 0; i < mini_SIZE; i++)
+	{
+		for (j = 0; j < mini_SIZE; j++)
+		{
+			fscanf(mini_matriz, "%c", &mini_mapa[i][j]);
+		}
+		fscanf(mini_matriz, "%c", &basura);
+	}
+
+
+
+
 	for (i = 0; i < SIZE; i++)
 	{
 		for (j = 0; j < SIZE; j++)
@@ -101,17 +126,8 @@ int main()
 		}
 		fscanf(fmapeado, "%c", &basura);
 	}
-
-	/*for (i = 0; i < SIZE; i++)
-	{
-		for (j = 0; j < SIZE; j++)
-		{
-			printf("%c", mapa[i][j]);
-		}
-		printf("\n");
-	}
-	fclose(fmapeado);*/
-
+	fclose(fmapeado);
+	fclose(mini_matriz);
 
 
 	ALLEGRO_SAMPLE* disparo_ = NULL;
@@ -138,7 +154,6 @@ int main()
 	ALLEGRO_BITMAP* recargas = al_load_bitmap(bala_completa);
 	ALLEGRO_BITMAP* enemy1 = al_load_bitmap(enemy1_);
 	ALLEGRO_BITMAP* fuegos[6] = { al_load_bitmap(fuego1),al_load_bitmap(fuego2) ,al_load_bitmap(fuego3) ,al_load_bitmap(fuego4) ,al_load_bitmap(fuego5),al_load_bitmap(nulo) };
-	ALLEGRO_BITMAP* hitbox = al_load_bitmap(hitbox1);
 	ALLEGRO_BITMAP* isla = al_load_bitmap(isla_);
 	ALLEGRO_BITMAP* isla_2 = al_load_bitmap("Imagenes/Isla2.png");
 	ALLEGRO_BITMAP* tabla_puntajes = al_load_bitmap(tabla_puntaje);
@@ -147,11 +162,11 @@ int main()
 	ALLEGRO_BITMAP* rec = al_load_bitmap(negro_);
 	ALLEGRO_COLOR negro = al_map_rgb(0, 0, 0);
 	ALLEGRO_DISPLAY* ventana = al_create_display(ancho, alto);
+	ALLEGRO_TIMER* fps = al_create_timer(1/20.0);
 	ALLEGRO_TIMER* seg = al_create_timer(1.0);
-	ALLEGRO_TIMER* fps = al_create_timer(1 / 20.0);
 	ALLEGRO_TIMER* recarga = al_create_timer(1.0);
-	ALLEGRO_FONT* letra = al_load_font("Sernes-Light.otf", 30, 0);
-	ALLEGRO_FONT* letra1 = al_load_font("Sernes-Light.otf", 15, 0);
+	ALLEGRO_FONT* letra = al_load_font("Sernes-Light.TTF", 40, 0);
+	ALLEGRO_FONT* letra1 = al_load_font("Sernes-Light.TTF", 20, 0);
 	ALLEGRO_BITMAP* llave = al_load_bitmap(llave_);
 
 		
@@ -204,26 +219,55 @@ int main()
 		{
 			if (mapa[j][i] == 'I')
 			{
-				dx[contx] = i * 22;
-				dy[contx] = j * 12;
+				dx[contx] = i * 396;
+				dy[contx] = j * 216;
 				contx++;
 			}
-			if (mapa[j][i] == 'R')
+		}
+	}
+	for (k = 0; k < contx; k++)
+	{
+		for (i = 0; i < mini_SIZE; i++)
+		{
+			for (j = 0; j < mini_SIZE; j++)
 			{
-				dx1[contx1] = i * 22;
-				dy1[contx1] = j * 12;
-				contx1++;
+				if (mini_mapa[i][j] == 'C')
+				{
+					dx1[contx1] = (i * 11) + dx[k];
+					dy1[contx1] = (j * 6) + dy[k];
+					contx1++;
+					
+				}
 			}
 		}
 	}
 
 
+	for (i = 0; i < mini_SIZE; i++)
+	{
+		for (j = 0; j < mini_SIZE; j++)
+		{
+			printf("%c", mini_mapa[i][j]);
+		}
+		printf("\n");
+	}
+
+	
 
 
 	while (true)
 	{
-		al_play_sample_instance(instans);
+		//al_play_sample_instance(instans);
 		al_wait_for_event(cola, &Evento);
+
+		if (Evento.type == ALLEGRO_EVENT_TIMER)
+		{
+
+			if (Evento.timer.source == fps)
+			{
+				fpss++;
+			}
+		}
 
 		if (play == false)
 		{
@@ -240,8 +284,8 @@ int main()
 						n = 1;
 						if (Evento.mouse.button)
 						{
-
 							play = true;
+							al_destroy_bitmap(menu[n]);
 						}
 					}
 				}
@@ -260,15 +304,11 @@ int main()
 		if (play == true)
 		{
 			al_draw_bitmap(fondo, 0, 0, 0);
-			//al_draw_bitmap(isla_2, 1000, 200, 0);
-			for (i = 0; i < contx; i++)
+			for (i = 0; i <= contx; i++)
 			{
 				al_draw_bitmap(isla, dx[i], dy[i], 0);
 			}
-			for (i = 0; i < contx1; i++)
-			{
-				al_draw_bitmap(rec, dx1[i], dy1[i], 0);
-			}
+
 
 			if (Evento.type == ALLEGRO_EVENT_TIMER)
 			{
@@ -376,6 +416,7 @@ int main()
 						{
 							al_draw_bitmap(bala1[cont1[i]], player.disparos_ply[i].pos_x, player.disparos_ply[i].pos_y, 0);
 						}
+
 					}
 				}
 			}
@@ -384,7 +425,7 @@ int main()
 
 			//===================    RECARGAS    ====================//
 
-			if (cant_disparos% 3 == 0 && auxx == true)
+			if (cant_disparos % 3 == 0 && auxx == true)
 			{
 				reloading = true;
 				if (Evento.type == ALLEGRO_EVENT_TIMER)
@@ -430,7 +471,7 @@ int main()
 
 				if (Evento.timer.source == seg)
 				{
-					segundo = segundo +1;
+					segundo = segundo + 1;
 				}
 			}
 
@@ -466,8 +507,8 @@ int main()
 						{
 							if (flag[i] != 0)
 							{
-								enem[i].pos_x = -150;
-								enem[i].pos_y = -150;
+								enem[i].pos_x = -1500;
+								enem[i].pos_y = -1500;
 								enem[i].vel_x = 0;
 								enem[i].vel_y = 0;
 								enem[i].ndisparos = 0;
@@ -501,7 +542,7 @@ int main()
 						else
 						{
 							disparos[enem[j].ndisparos].x = 0;
-							disparos[enem[j].ndisparos].y =0;
+							disparos[enem[j].ndisparos].y = 0;
 							disparos[enem[j].ndisparos].vel_x = 0;
 							disparos[enem[j].ndisparos].vel_y = 0;
 						}
@@ -528,7 +569,7 @@ int main()
 			//==================   COLISION BALA-----ENEMIGO   =================//
 			if (cant_disparos > 0)
 			{
-				for (k = 1; k < num_enem+1; k++)
+				for (k = 1; k < num_enem + 1; k++)
 				{
 					for (i = 0; i <= cant_disparos; i++)
 					{
@@ -550,10 +591,18 @@ int main()
 								player.disparos_ply[i].pos_y = NULL;
 							}
 						}
+						if (player.disparos_ply[i].pos_x > 1900 && player.disparos_ply[i].pos_x < 20)
+						{
+							if (player.disparos_ply[i].pos_y > 1000 && player.disparos_ply[i].pos_y < 20)
+							{
+								rachas_ = 1;
+							}
+						}
 					}
 				}
 
 			}
+
 			//////////////////////////////============= GENERACION DE ITEM PARA CURAR=========================///////////////////
 
 			if (segundo > 5 && segundo != 0 && llaves == 1)
@@ -561,7 +610,7 @@ int main()
 				llave_x = 500;
 				llave_y = 500;
 				llaves = 0;
-			}	
+			}
 			if (llaves == 0)
 			{
 				if (segundo <= 150)
@@ -571,7 +620,7 @@ int main()
 						al_draw_bitmap(llave, llave_x, llave_y, n);
 					}
 				}
-					
+
 			}
 
 			///////////////////////////================ COLISION ITEM PARA CURAR Y JUGADOR =============//////////////////
@@ -700,13 +749,11 @@ int main()
 
 				//==================== COLISION JUGADOR-----ENEMIGOS   ======================//
 
-			flag[i] = col_jugador__enemigo(num_enem, player, i, cont, enem, disparos, omega, flag);
-
 
 			////////////////////////////////////////////////================= COLISION BALA ------ PLAYER ==================//////////////////////////////////////////////////////
 
-
-			for (i = 1; i <= enem[num_enem].ndisparos + 1; i++)
+			al_draw_line(player.x + 80 + 100 * sin(omega[cont] * f), player.y + 100 - 100 * cos(omega[cont] * f),  player.x + 122.5 - 100 * sin(omega[cont] * f), player.y + 100 + 100 * cos(omega[cont] * f), negro, 15);
+			for (i = 1; i <= max_disparos; i++)
 			{
 				if (omega[cont] == 0)
 				{
@@ -826,111 +873,42 @@ int main()
 
 			//////////////////////====================== COLISION ===============================//////////////////////
 
-			al_draw_filled_rectangle(500, 500, 600, 600, negro);
-			for (i = 0; i < contx1; i++)
+			
+
+
+			angulo_x = 100 * sin(omega[cont] * f);
+			angulo_y = 100 * cos(omega[cont] * f);
+			if (mapa[(player.y + 100 - angulo_y) / 216][(player.x + 100 + angulo_x) / 396] == 'I')
 			{
-				if (omega[cont] == 0)
+				for (k = 0; k < contx; k++)
 				{
-					if (dx1[i] + 22 >= player.x + 80 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 122.5 - 100 * sin(omega[cont] * f))
+					if (mini_mapa[(player.y + 100 - angulo_y - dy[k]) / 6][(player.x + 100 + angulo_x - dx[k]) / 11] == 'C')
 					{
-						if (dy1[i] + 12 >= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] <= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
+						choque[cont] = 1;
 					}
+					else
+					{		
+						choque[cont] = 0;
+					}					
 				}
-				if (omega[cont] == 180)
-				{
-					if (dx1[i] + 22 >= player.x + 80 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 122.5 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-					
-				}
-				if (omega[cont] == 90)
-				{
-					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] <= player.y + 122.5 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 80 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-					
-				}
-				if (omega[cont] == 270)
-				{
-					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 200 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] <= player.y + 122.5 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 80 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-					
-				}
-				if (omega[cont] > 0 && omega[cont] < 90)
-				{
-					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] + 12 >= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] <= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-					
-				}
-				if (omega[cont] > 90 && omega[cont] < 180)
-				{
-					if (dx1[i] <= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] + 22 >= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-				}
-				if (omega[cont] > 180 && omega[cont] < 270)
-				{
-					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] <= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] + 12 >= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-					
-					}
-					
-				}
-				if (omega[cont] > 270)
-				{
-					if (dx1[i] + 22 >= player.x + 100 + 100 * sin(omega[cont] * f) && dx1[i] <= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-						if (dy1[i] + 12 >= player.y + 100 - 100 * cos(omega[cont] * f) && dy1[i] <= player.y + 100 + 100 * cos(omega[cont] * f))
-						{
-							choque[cont] = 1;
-						}
-						
-					}
-					
-				}
-				
 			}
+			else
+			{
+				choque[cont] = 0;
+			}
+		
+			
 	
+			
+
+
 			///////////////////======================= CREAR JEFE ========================///////////////////////
 
-			
 					
-			if (true)
+			if (false)
 			{
+				/// ============================ MOVIMIENTO ======================////////
+
 				if (boss.pos_x > -200 && conta == 3)
 				{
 					boss = movimiento(boss, player);
@@ -956,8 +934,34 @@ int main()
 				    boss.pos_y = player.y;
 				}
 
-				//////////////////////======= CREAR BALAS ======////////
-				
+				/////////////////////////////////////========================== DISPAROS DEL BOSS =========================////////////////////////////
+				if (a++ > 10)
+				{
+					auxxx = 0; a = 0;
+
+				}
+
+				if (conta == 3)
+				{
+					if (boss.ndisparos <= boss_max_disparos && auxxx == 0)
+					{
+						boss.ndisparos++;
+						disparos_boss[boss.ndisparos].x = boss.pos_x + 64;
+						disparos_boss[boss.ndisparos].y = boss.pos_y + 43;
+						disparos_boss[boss.ndisparos].vel_x = 40;
+						disparos_boss[boss.ndisparos].vel_y = 0;
+						auxxx = 1;
+					}
+				}
+							
+				for (i = 1; i < boss.ndisparos; i++)
+				{
+					disparos_boss[i].x = disparos_boss[i].x - disparos_boss[i].vel_x;
+					if (disparos_boss[i].x >= 0)
+					{
+						al_draw_bitmap(bala1[15], disparos_boss[i].x, disparos_boss[i].y, 0);
+					}
+				}
 
 			}
 			al_draw_bitmap(circulo_, 50, 933, 0);

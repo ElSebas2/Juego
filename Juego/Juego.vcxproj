@@ -150,6 +150,7 @@
     <ClInclude Include="Allegro_imagenes.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Estructuras.h" />
+    <ClInclude Include="Funciones.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Imagenes.h" />
   </ItemGroup>

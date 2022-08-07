@@ -21,8 +21,6 @@ const char* p13 = "Imagenes/Rotaciones/A13.png";
 const char* p14 = "Imagenes/Rotaciones/A14.png";
 const char* p15 = "Imagenes/Rotaciones/A15.png";
 
-const char* hitbox1 = "Imagenes/Rotaciones/hitbox.png";
-
 const char* bala_arriba = "Imagenes/Rotaciones_bala/BalaArriba.png";
 const char* bala22 = "Imagenes/Rotaciones_bala/bala 22.png";
 const char* bala44 = "Imagenes/Rotaciones_bala/bala 44.png";
