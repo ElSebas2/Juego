@@ -7,7 +7,7 @@ struct enemy_
 	int vel_y;
 	int ndisparos = 0;
 
-}enem[max_enemy];;
+}enem[max_enemy];
 
 struct bala_
 {
@@ -40,7 +40,7 @@ struct jefe
 {
 	int vida = 10;
 	int pos_x = 1980;
-	int pos_y = player.y;
+	int pos_y;
 	int ndisparos = 1;
 
 }boss;

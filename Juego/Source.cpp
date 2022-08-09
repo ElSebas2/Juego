@@ -17,6 +17,7 @@
 //struct bala_ *colisiones_jugador(int num_enem, int x, int y, int i, int cont, struct enemy_ enem[max_enemy],struct bala_ disparos[max_disparos], int omega[16]);
 //struct jugador vida_jugador(int num_enem, int x, int y, int i, int cont, struct enemy_ enem[max_enemy], struct bala_ disparos[max_disparos], int omega[16], struct jugador jugador1);
 
+void init();
 struct jefe movimiento(struct jefe boss, struct jugador player);
 int col_jugador__enemigo(int num_enem, struct jugador player, int i, int cont, struct enemy_ enem[max_enemy], struct bala_ disparos[max_disparos], int omega[16], int flag[max_enemy]);
 
@@ -46,7 +47,7 @@ int main()
 	int puntajes = 0;
 	int rachas_ = 1;
 	int vida_player = 0;
-	int flag[max_enemy] = { 0 };
+	int flag[20] = { 0 };
 	int i;
 	int aux = 0;
 	int num_enem = 0;
@@ -71,18 +72,15 @@ int main()
 	int segundo = 0;
 	int j;
 	int n = 0;
-
-
 	
-	al_init();
-	al_install_keyboard();
-	al_init_image_addon();
-	al_init_font_addon();
-	al_init_ttf_addon();
-	al_install_mouse();
-	al_init_primitives_addon();
-	al_install_audio();
-	al_init_acodec_addon();
+	int maxFrame = 5;
+	int cantFrame = 0;
+	int Framecount = 0;
+	int FrameDelay = 0;
+
+
+	init();
+	
 
 	int ancho = GetSystemMetrics(SM_CXSCREEN);
 	int alto = GetSystemMetrics(SM_CYSCREEN);
@@ -127,13 +125,16 @@ int main()
 	fclose(fmapeado);
 	fclose(mini_matriz);
 
+	ALLEGRO_SAMPLE* machine_gun = NULL;
 	ALLEGRO_SAMPLE* ametralladora = NULL;
 	ALLEGRO_SAMPLE* disparo_ = NULL;
 	ALLEGRO_SAMPLE* musicas = NULL;
 	ALLEGRO_SAMPLE_INSTANCE* instans = NULL;
+	
 
 	al_reserve_samples(15);
 
+	machine_gun = al_load_sample(machinegun);
 	ametralladora = al_load_sample(disp_avion);
 	musicas = al_load_sample(song);
 	disparo_ = al_load_sample(disparos_);
@@ -147,14 +148,14 @@ int main()
 
 	ALLEGRO_EVENT_QUEUE* cola = al_create_event_queue();
 	ALLEGRO_BITMAP* jefe_[4] = { al_load_bitmap(avion),al_load_bitmap(avion1),al_load_bitmap(avion2),al_load_bitmap(avion3) };
-	ALLEGRO_BITMAP* fondo = al_load_bitmap("Imagenes/fondo.jpg");
+	ALLEGRO_BITMAP* fondo = al_load_bitmap("Imagenes/fondo.bmp");
 	ALLEGRO_BITMAP* vida[6] = { al_load_bitmap(vida1),al_load_bitmap(vida2) ,al_load_bitmap(vida3) ,al_load_bitmap(vida4) ,al_load_bitmap(vida5),al_load_bitmap(vida6) };
-	ALLEGRO_BITMAP* a0[16] = { al_load_bitmap(p0), al_load_bitmap(p1),al_load_bitmap(p2), al_load_bitmap(p3), al_load_bitmap(p4), al_load_bitmap(p5), al_load_bitmap(p6), al_load_bitmap(p7), al_load_bitmap(p8), al_load_bitmap(p9), al_load_bitmap(p10), al_load_bitmap(p11), al_load_bitmap(p12),al_load_bitmap(p13), al_load_bitmap(p14),al_load_bitmap(p15) };
+	ALLEGRO_BITMAP* jugador = al_load_bitmap(p0);
 	ALLEGRO_BITMAP* bala1[17] = { al_load_bitmap(bala_derecha), al_load_bitmap(bala112), al_load_bitmap(bala134), al_load_bitmap(bala156), al_load_bitmap(bala_abajo), al_load_bitmap(bala202), al_load_bitmap(bala224), al_load_bitmap(bala246), al_load_bitmap(bala_izquierda), al_load_bitmap(bala292), al_load_bitmap(bala314), al_load_bitmap(bala336),al_load_bitmap(bala_arriba),al_load_bitmap(bala22),al_load_bitmap(bala44),al_load_bitmap(bala68),al_load_bitmap(nulo) };
 	ALLEGRO_BITMAP* circulo_ = al_load_bitmap(circulo);
 	ALLEGRO_BITMAP* recargas = al_load_bitmap(bala_completa);
 	ALLEGRO_BITMAP* enemy1 = al_load_bitmap(enemy1_);
-	ALLEGRO_BITMAP* fuegos[6] = { al_load_bitmap(fuego1),al_load_bitmap(fuego2) ,al_load_bitmap(fuego3) ,al_load_bitmap(fuego4) ,al_load_bitmap(fuego5),al_load_bitmap(nulo) };
+	ALLEGRO_BITMAP* fuegos[5] = { al_load_bitmap(fuego1),al_load_bitmap(fuego2) ,al_load_bitmap(fuego3) ,al_load_bitmap(fuego4) ,al_load_bitmap(fuego5)};
 	ALLEGRO_BITMAP* isla = al_load_bitmap(isla_);
 	ALLEGRO_BITMAP* isla_2 = al_load_bitmap("Imagenes/Isla2.png");
 	ALLEGRO_BITMAP* tabla_puntajes = al_load_bitmap(tabla_puntaje);
@@ -163,8 +164,8 @@ int main()
 	ALLEGRO_BITMAP* rec = al_load_bitmap(negro_);
 	ALLEGRO_COLOR negro = al_map_rgb(0, 0, 0);
 	ALLEGRO_DISPLAY* ventana = al_create_display(ancho, alto);
-	ALLEGRO_TIMER* fps = al_create_timer(1/20.0);
-	ALLEGRO_TIMER* seg = al_create_timer(1.0);
+	ALLEGRO_TIMER* fps = al_create_timer(1.0/2);
+	ALLEGRO_TIMER* seg = al_create_timer(1.0 /2);
 	ALLEGRO_TIMER* recarga = al_create_timer(1.0);
 	ALLEGRO_FONT* letra = al_load_font("Sernes-Light.TTF", 40, 0);
 	ALLEGRO_FONT* letra1 = al_load_font("Sernes-Light.TTF", 20, 0);
@@ -241,14 +242,6 @@ int main()
 	}
 
 
-	for (i = 0; i < mini_SIZE; i++)
-	{
-		for (j = 0; j < mini_SIZE; j++)
-		{
-			printf("%c", mini_mapa[i][j]);
-		}
-		printf("\n");
-	}
 
 	
 
@@ -258,14 +251,6 @@ int main()
 		//al_play_sample_instance(instans);
 		al_wait_for_event(cola, &Evento);
 
-		if (Evento.type == ALLEGRO_EVENT_TIMER)
-		{
-
-			if (Evento.timer.source == fps)
-			{
-				fpss++;
-			}
-		}
 
 		if (play == false)
 		{
@@ -301,7 +286,9 @@ int main()
 
 		if (play == true)
 		{
+
 			al_draw_bitmap(fondo, 0, 0, 0);
+			al_draw_line(player.x, player.y, player.x + 200, player.y + 200, negro, 5);
 			for (i = 0; i <= contx; i++)
 			{
 				al_draw_bitmap(isla, dx[i], dy[i], 0);
@@ -316,33 +303,35 @@ int main()
 					fpss = fpss + 1;
 				}
 			}
-
+			printf("\n%d", cont);
 			if (Evento.type == ALLEGRO_EVENT_KEY_DOWN)
 			{
-				if (Evento.keyboard.keycode == ALLEGRO_KEY_UP)
-				{
-					freno = false;
-				}
-				if (Evento.keyboard.keycode == ALLEGRO_KEY_DOWN)
-				{
-					freno = true;
 
-				}
-				if (Evento.keyboard.keycode == ALLEGRO_KEY_RIGHT)
+				switch (Evento.keyboard.keycode)
 				{
+				case ALLEGRO_KEY_UP:
+					freno = false;
+					break;
+
+				case ALLEGRO_KEY_DOWN:
+					freno = true;
+					break;
+
+				case ALLEGRO_KEY_RIGHT:
 					cont++;
 					if (cont > 15)
 					{
 						cont = 0;
 					}
-				}
-				if (Evento.keyboard.keycode == ALLEGRO_KEY_LEFT)
-				{
+					break;
+
+				case ALLEGRO_KEY_LEFT:
 					cont = cont - 1;
 					if (cont < 0)
 					{
 						cont = 15;
 					}
+					break;
 				}
 			}
 			/*//==============     AJUSTAR VELOCIDAD PARA LAS POSICIONES    ================================//*/
@@ -466,10 +455,13 @@ int main()
 
 			if (Evento.type == ALLEGRO_EVENT_TIMER)
 			{
-
-				if (Evento.timer.source == seg)
+				if (++Framecount >= FrameDelay)
 				{
-					segundo = segundo + 1;
+					if (++cantFrame >= 5)
+					{
+						cantFrame = 0;
+					}
+					Framecount = 0;
 				}
 			}
 
@@ -483,6 +475,7 @@ int main()
 				enem[num_enem].vel_y = vel_enemy;
 				enem[num_enem].ndisparos = 0;
 				aux1 = 1;
+				
 			}
 
 			if (cont2++ > 120)
@@ -494,6 +487,7 @@ int main()
 			{
 				for (i = 1; i <= num_enem; i++)
 				{
+					//if (enem[i].activo==1)
 					if (enem[i].pos_y != -150 && enem[i].pos_y > -150)
 					{
 						enem[i].pos_y = enem[i].pos_y - enem[i].vel_y;
@@ -525,7 +519,7 @@ int main()
 			for (j = 1; j <= num_enem; j++)
 			{
 
-				if (segundo > 2 && aux == 0)
+				if (aux == 0)
 				{
 					if (enem[j].ndisparos <= max_disparos)
 					{
@@ -561,6 +555,8 @@ int main()
 						al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, flag[i]);
 					}
 				}
+				//else
+				//disparos[i].activado = 0;
 			}
 
 
@@ -738,11 +734,6 @@ int main()
 				}
 			}
 
-			/*
-				//======================== VIDA JUGADOR  =========================//
-				vida_jugador(num_enem, x, y, i, cont, enem, disparos, omega, jugador1);
-				//====================	COLISION BALA-------JUGADOR	================//
-				disparos[i] = *colisiones_jugador(num_enem, x, y, i, cont, enem ,disparos, omega);*/
 
 
 				//==================== COLISION JUGADOR-----ENEMIGOS   ======================//
@@ -752,63 +743,63 @@ int main()
 
 			for (i = 1; i <= max_disparos; i++)
 			{
-				if (omega[cont] == 0)
+				switch (omega[cont])
 				{
+				case 0:
 					if (disparos[i].x >= player.x + 80 + 100 * sin(omega[cont] * f) && disparos[i].x <= player.x + 122.5 - 100 * sin(omega[cont] * f))
 					{
 						if (disparos[i].y >= player.y + 100 - 100 * cos(omega[cont] * f) && disparos[i].y <= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
 							disparos[i].x = 1980;
 						}
 					}
-				}
-				if (omega[cont] == 180)
-				{
+					break;
+				case 180:
 					if (disparos[i].x >= player.x + 80 + 100 * sin(omega[cont] * f) && disparos[i].x <= player.y + 122.5 - 100 * sin(omega[cont] * f))
 					{
 						if (disparos[i].y <= player.y + 100 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
 							disparos[i].x = 1980;
 						}
 					}
-				}
-				if (omega[cont] == 90)
-				{
-					if (disparos[i].x <= player.x + 100 + 100 * sin(omega[cont] * f) && disparos[i].x >= player.x + 100 - 100 * sin(omega[cont] * f))
-					{
-
-						if (disparos[i].y <= player.y + 122.5 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 80 + 100 * cos(omega[cont] * f))
-						{
-							if (vida_player < 6)
-							{
-								vida_player++;
-							}
-							disparos[i].x = 1980;
-						}
-					}
-				}
-				if (omega[cont] == 270)
-				{
+					break;
+				case 90:
 					if (disparos[i].x >= player.x + 100 + 100 * sin(omega[cont] * f) && disparos[i].x <= player.x + 100 - 100 * sin(omega[cont] * f))
 					{
 						if (disparos[i].y <= player.y + 122.5 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 80 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
 							disparos[i].x = 1980;
 						}
 					}
+					break;
+				case 270:
+					if (disparos[i].x >= player.x + 100 + 100 * sin(omega[cont] * f) && disparos[i].x <= player.x + 100 - 100 * sin(omega[cont] * f))
+					{
+						if (disparos[i].y <= player.y + 122.5 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 80 + 100 * cos(omega[cont] * f))
+						{
+							if (vida_player < 5)
+							{
+								vida_player++;
+							}
+							disparos[i].x = 1980;
+						}
+					}
+					break;
+
 				}
+				
 				if (omega[cont] > 0 && omega[cont] < 90)
 				{
 					if (disparos[i].x <= player.x + 100 + 100 * sin(omega[cont] * f) && disparos[i].x >= player.x + 100 - 100 * sin(omega[cont] * f))
@@ -829,7 +820,7 @@ int main()
 					{
 						if (disparos[i].y <= player.y + 100 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
@@ -843,7 +834,7 @@ int main()
 					{
 						if (disparos[i].y <= player.y + 100 - 100 * cos(omega[cont] * f) && disparos[i].y >= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
@@ -857,7 +848,7 @@ int main()
 					{
 						if (disparos[i].y >= player.y + 100 - 100 * cos(omega[cont] * f) && disparos[i].y <= player.y + 100 + 100 * cos(omega[cont] * f))
 						{
-							if (vida_player < 6)
+							if (vida_player < 5)
 							{
 								vida_player++;
 							}
@@ -875,6 +866,7 @@ int main()
 
 			angulo_x = 100 * sin(omega[cont] * f);
 			angulo_y = 100 * cos(omega[cont] * f);
+
 			if (mapa[(player.y + 100 - angulo_y) / 216][(player.x + 100 + angulo_x) / 396] == 'I')
 			{
 				for (k = 0; k < contx; k++)
@@ -902,12 +894,12 @@ int main()
 			///////////////////======================= CREAR JEFE ========================///////////////////////
 
 					
-			if (true)
+			if (false)
 			{
 				/// ============================ MOVIMIENTO ======================////////
-
 				if (boss.pos_x > -200 && conta == 3)
 				{
+					
 					boss = movimiento(boss, player);
 				}
 				if (boss.pos_x < -200 && conta == 3)
@@ -928,11 +920,11 @@ int main()
 				{
 					conta = 3;
 					boss.pos_x = 1980;
-				    boss.pos_y = player.y;
+					boss.pos_y = player.y;
 				}
 
 				/////////////////////////////////////========================== DISPAROS DEL BOSS =========================////////////////////////////
-				/*if (a++ > 10)
+			/*	if (a++ > 10)
 				{
 					auxxx = 0; a = 0;
 				}
@@ -940,48 +932,73 @@ int main()
 				{
 					if (boss.ndisparos <= boss_max_disparos && auxxx == 0)
 					{
-						boss.ndisparos++;
-						disparos_boss[boss.ndisparos].x = boss.pos_x + 100;
-						disparos_boss[boss.ndisparos].y = boss.pos_y + 33;
-						disparos_boss[boss.ndisparos].vel_x = 40;
-						disparos_boss[boss.ndisparos].vel_y = 0;
-						boss.ndisparos++;
-						disparos_boss[boss.ndisparos].x = boss.pos_x - 64;
-						disparos_boss[boss.ndisparos].y = boss.pos_y + 160;
-						disparos_boss[boss.ndisparos].vel_x = 40;
-						disparos_boss[boss.ndisparos].vel_y = 0;
-						auxxx = 1;
-						al_play_sample(ametralladora, 0.2, 0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0);
-					}
-				}
-					
-				for (i = 1; i < boss.ndisparos; i++)
-				{
-					disparos_boss[i].x = disparos_boss[i].x - disparos_boss[i].vel_x;
-					if (disparos_boss[i].x >= 0)
-					{
-						al_draw_bitmap(bala1[8], disparos_boss[i].x, disparos_boss[i].y, 0);
+						if (boss.pos_y > 0 && boss.pos_x > 0)
+						{
+							boss.ndisparos++;
+							disparos_boss[boss.ndisparos].x = boss.pos_x - 64;
+							disparos_boss[boss.ndisparos].y = boss.pos_y + 33;
+							disparos_boss[boss.ndisparos].vel_x = 40;
+							disparos_boss[boss.ndisparos].vel_y = 0;
+							if (boss.ndisparos == 2)
+							{
+								al_play_sample(machine_gun, 0.2, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+							}
+							boss.ndisparos++;
+							disparos_boss[boss.ndisparos].x = boss.pos_x - 64;
+							disparos_boss[boss.ndisparos].y = boss.pos_y + 160;
+							disparos_boss[boss.ndisparos].vel_x = 40;
+							disparos_boss[boss.ndisparos].vel_y = 0;
+							auxxx = 1;
+							al_play_sample(ametralladora, 0.2, 0, 1.5, ALLEGRO_PLAYMODE_ONCE, 0);
+						}
 					}
 				}*/
+				
+				for (i = 1; i < boss.ndisparos; i++)
+				{
+					if (disparos_boss[i].x >= 0)
+					{
+						disparos_boss[i].x = disparos_boss[i].x - disparos_boss[i].vel_x;
+						al_draw_bitmap(bala1[8], disparos_boss[i].x, disparos_boss[i].y, 0);
+					}
+					if (player.x == disparos_boss[i].x && player.y == disparos_boss[i].y)
+					{
+						al_draw_line(200, 200, 500, 500, negro, 15);
+					}
+				}
 
 			}
+		
+
 			al_draw_bitmap(circulo_, 50, 933, 0);
 			al_draw_bitmap(recargas, 50, 933, 0);
-			al_draw_bitmap(a0[cont], player.x, player.y, 0);
-			al_draw_bitmap(jefe_[conta], boss.pos_x, boss.pos_y, 0);
+			al_draw_rotated_bitmap(jugador, 100, 100, player.x,player.y,omega[cont]*f, 0);
+			if (vida_player >= 0)
+			{
+				al_draw_bitmap(fuegos[cantFrame], player.x + 65 + 65 * sin(omega[cont] * f), player.y + 65 - 65 * cos(omega[cont] * f), 0);
+			}
+			if (vida_player >= 4)
+			{
+				al_draw_bitmap(fuegos[cantFrame], player.x + 65 + 65 * sin(omega[cont] * f), player.y + 100 - 100 * cos(omega[cont] * f), 0);
+
+			}
+			if (boss.pos_x > -200 && boss.pos_x < 1980)
+			{
+				al_draw_bitmap(jefe_[conta], boss.pos_x, boss.pos_y, 0);
+			}
 			al_draw_bitmap(tabla_puntajes, 1200, 0, 0);
 			al_draw_bitmap(racha, 1385, 90, 0);
 			al_draw_textf(letra, negro, 1250, 30, 0, "Puntaje:    %d", puntajes);
+
 			al_draw_textf(letra1, negro, 1415, 100, 0, "Racha:   x%d", rachas_);
 			al_draw_bitmap(vida[vida_player], 900, 0, 0);
 			if (Evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 			{
-				al_destroy_bitmap(a0[cont]);
+				al_destroy_bitmap(jugador);
 				al_destroy_bitmap(circulo_);
 				al_destroy_bitmap(recargas);
 				return 0;
 			}
-
 		}
 		al_flip_display();
 	}
@@ -1183,6 +1200,18 @@ struct jefe movimiento(struct jefe boss, struct jugador player)
 	}
 	boss.pos_x = boss.pos_x - boss_speed;
 	return boss;
+}
+void init()
+{
+	al_init();
+	al_install_keyboard();
+	al_init_image_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
+	al_install_mouse();
+	al_init_primitives_addon();
+	al_install_audio();
+	al_init_acodec_addon();
 }
 
 

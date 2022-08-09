@@ -1,25 +1,25 @@
-const char* fuego1 = "Imagenes/Frame/fuego1.png";
-const char* fuego2 = "Imagenes/Frame/fuego2.png";
-const char* fuego3 = "Imagenes/Frame/fuego3.png";
-const char* fuego4 = "Imagenes/Frame/fuego4.png";
-const char* fuego5 = "Imagenes/Frame/fuego5.png";
+const char* fuego1 = "Imagenes/Frame/fuego1.bmp";
+const char* fuego2 = "Imagenes/Frame/fuego2.bmp";
+const char* fuego3 = "Imagenes/Frame/fuego3.bmp";
+const char* fuego4 = "Imagenes/Frame/fuego4.bmp";
+const char* fuego5 = "Imagenes/Frame/fuego5.bmp";
 
-const char* p0 = "Imagenes/Rotaciones/A0.png";
-const char* p1 = "Imagenes/Rotaciones/A1.png";
-const char* p2 = "Imagenes/Rotaciones/A2.png";
-const char* p3 = "Imagenes/Rotaciones/A3.png";
-const char* p4 = "Imagenes/Rotaciones/A4.png";
-const char* p5 = "Imagenes/Rotaciones/A5.png";
-const char* p6 = "Imagenes/Rotaciones/A6.png";
-const char* p7 = "Imagenes/Rotaciones/A7.png";
-const char* p8 = "Imagenes/Rotaciones/A8.png";
-const char* p9 = "Imagenes/Rotaciones/A9.png";
-const char* p10 = "Imagenes/Rotaciones/A10.png";
-const char* p11 = "Imagenes/Rotaciones/A11.png";
-const char* p12 = "Imagenes/Rotaciones/A12.png";
-const char* p13 = "Imagenes/Rotaciones/A13.png";
-const char* p14 = "Imagenes/Rotaciones/A14.png";
-const char* p15 = "Imagenes/Rotaciones/A15.png";
+const char* p0 = "Imagenes/Rotaciones/A0.bmp";
+const char* p1 = "Imagenes/Rotaciones/A1.bmp";
+const char* p2 = "Imagenes/Rotaciones/A2.bmp";
+const char* p3 = "Imagenes/Rotaciones/A3.bmp";
+const char* p4 = "Imagenes/Rotaciones/A4.bmp";
+const char* p5 = "Imagenes/Rotaciones/A5.bmp";
+const char* p6 = "Imagenes/Rotaciones/A6.bmp";
+const char* p7 = "Imagenes/Rotaciones/A7.bmp";
+const char* p8 = "Imagenes/Rotaciones/A8.bmp";
+const char* p9 = "Imagenes/Rotaciones/A9.bmp";
+const char* p10 = "Imagenes/Rotaciones/A10.bmp";
+const char* p11 = "Imagenes/Rotaciones/A11.bmp";
+const char* p12 = "Imagenes/Rotaciones/A12.bmp";
+const char* p13 = "Imagenes/Rotaciones/A13.bmp";
+const char* p14 = "Imagenes/Rotaciones/A14.bmp";
+const char* p15 = "Imagenes/Rotaciones/A15.bmp";
 
 const char* bala_arriba = "Imagenes/Rotaciones_bala/BalaArriba.png";
 const char* bala22 = "Imagenes/Rotaciones_bala/bala 22.png";
@@ -63,6 +63,7 @@ const char* menu_high = "Imagenes/Menu/menu_highs.jpg";
 const char* disp_avion = "Musica/ametralladora.ogg";
 const char* disparos_ = "Musica/disparo.ogg";
 const char* song = "Musica/song.ogg";
+const char* machinegun = "Musica/machingun.ogg";
 
 const char* llave_ = "Imagenes/llave.png";
 
@@ -70,6 +71,7 @@ const char* avion = "Imagenes/Enemigos/avion.png";
 const char* avion1 = "Imagenes/Enemigos/avion1.png";
 const char* avion2 = "Imagenes/Enemigos/avion2.png";
 const char* avion3 = "Imagenes/Enemigos/avion3.png";
+
 
 const char* negro_ = "Imagenes/matriz.jpg";
 

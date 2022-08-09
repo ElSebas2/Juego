@@ -11,4 +11,4 @@
 #define SIZE 5 
 #define mini_SIZE 36 
 #define boss_speed 15
-#define boss_max_disparos 30
+#define boss_max_disparos 100
