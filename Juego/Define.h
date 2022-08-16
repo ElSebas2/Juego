@@ -9,6 +9,7 @@
 #define max_enemy 10
 #define cant_vida 0
 #define SIZE 5 
-#define mini_SIZE 36 
+#define mini_SIZE 16 
 #define boss_speed 15
 #define boss_max_disparos 100
+#define MAPA_JUEGO 3

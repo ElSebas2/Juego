@@ -9,6 +9,16 @@ struct enemy_
 
 }enem[max_enemy];
 
+
+
+struct enemy_timer
+{
+	int aux = 0;
+	int timer = 0;
+}timer_enem;
+
+
+
 struct bala_
 {
 	int x;
@@ -23,14 +33,14 @@ struct bala_player
 	int pos_y;
 	int vel_x;
 	int vel_y;
-};
+}disparos_ply[max_disparos_ply];
 
 struct jugador
 {
-	int x = 700;
-	int y = 700;
-	int vel_x;
-	int vel_y;
+	int x = 300;
+	int y = 500;
+	float vel_x[16];
+	float vel_y[16];
 	int vida = 0;
 	struct bala_player disparos_ply[max_disparos_ply];
 }player;
@@ -39,7 +49,7 @@ struct jugador
 struct jefe
 {
 	int vida = 10;
-	int pos_x = 1980;
+	int pos_x = 1280;
 	int pos_y;
 	int ndisparos = 1;
 
@@ -52,4 +62,13 @@ struct balas_boss
 	int vel_x;
 	int vel_y;
 }disparos_boss[max_disparos];
+
+
+struct salas_
+{
+	struct enemy_ enem[max_enemy];
+	int posiciones_mapa[4];
+	int id;
+
+}salas[9];
 

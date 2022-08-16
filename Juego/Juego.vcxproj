@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Allegro_imagenes.h" />
+    <ClInclude Include="Declarar_variables.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Estructuras.h" />
     <ClInclude Include="Funciones.h" />
