@@ -6,7 +6,8 @@ struct enemy_
 	int vel_x;
 	int vel_y;
 	int ndisparos = 0;
-
+	int flag = 0;
+	int angulo = 0;
 }enem[max_enemy];
 
 
@@ -37,8 +38,8 @@ struct bala_player
 
 struct jugador
 {
-	int x = 300;
-	int y = 500;
+	int x = 500;
+	int y = 200;
 	float vel_x[16];
 	float vel_y[16];
 	int vida = 0;
@@ -70,5 +71,13 @@ struct salas_
 	int posiciones_mapa[4];
 	int id;
 
-}salas[9];
+}salasl[9];
+
+struct enemy2
+{
+	int x;
+	int y;
+	int ndisparos;
+	int vida;
+}enem2[max_enemy];
 

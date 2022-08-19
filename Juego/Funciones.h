@@ -2,13 +2,14 @@
 
 
 
-int col_bala_enemigo(struct jugador player, struct enemy_ enem[max_enemy], int num_enem, int cant_disparos, struct bala_player disparos_ply[max_disparos_ply]);
+void col_bala_enemigo(struct jugador player, struct enemy_ enem[max_enemy], int num_enem, int cant_disparos, struct bala_player disparos_ply[max_disparos_ply], int* ii, int* kk, int* activar_col);
 struct jugador velocidades_jugador(struct jugador player, int orientacion_jugador, bool freno, int choque[16]);
-struct enemy_* crear_enemgios(struct enemy_ enem[max_enemy], int num_enem);
+struct enemy_ crear_enemgios(struct enemy_ enem[], int num_enem,int nivel_mapa);
 void init();
+void col_bala_jugador(struct jugador player, struct bala_ disparos[], int omega[], int orientacion_jugador, int col_jug_enem[], int ajuste, int* activar_col, int* ii);
 float error_x_jugador(int omega[16], int orientacion_jugador);
 float error_y_jugador(int omega[16], int orientacion_jugador);
-
+void col_enem_jugador(struct jugador player, struct enemy_ enem[], int omega[], int orientacion_jugador, int num_enem, int ajuste, int col_jug_enem[], int* activar_col, int* ii);
 
 
 
@@ -27,16 +28,55 @@ void init()
 	al_install_audio();
 	al_init_acodec_addon();
 }
-struct enemy_* crear_enemgios(struct enemy_ enem[max_enemy], int num_enem)
+struct enemy_ crear_enemgios(struct enemy_ enem[], int num_enem,int nivel_mapa)
 {
-	enem[num_enem].pos_x = 50 + rand() % 300;
-	enem[num_enem].pos_y = 720;
-	enem[num_enem].vel_x = 0;
-	enem[num_enem].vel_y = vel_enemy;
-	enem[num_enem].ndisparos = 0;
-	
+	switch (nivel_mapa)
+	{
+	case 1:
+		enem[num_enem].pos_x = 50 + rand() % 300;
+		enem[num_enem].pos_y = 800;
+		enem[num_enem].vel_x = 0;
+		enem[num_enem].vel_y = -vel_enemy;
+		enem[num_enem].ndisparos = 0;
+		enem[num_enem].flag = 0;
+		enem[num_enem].angulo = 0;
+		break;
+	case 2:
+		if (num_enem % 2 == 0)
+		{
+			enem[num_enem].pos_x = -100;
+			enem[num_enem].pos_y = 50 + rand() % 300;
+			enem[num_enem].vel_x = vel_enemy;
+			enem[num_enem].vel_y = 0;
+			enem[num_enem].ndisparos = 0;
+			enem[num_enem].flag = 0;
+			enem[num_enem].angulo = 90*f;
 
-	return enem;
+		}
+		else
+		{
+			enem[num_enem].pos_x = 50 + rand() % 300;
+			enem[num_enem].pos_y = 800;
+			enem[num_enem].vel_x = 0;
+			enem[num_enem].vel_y = -vel_enemy;
+			enem[num_enem].ndisparos = 0;
+			enem[num_enem].flag = 0;
+			enem[num_enem].angulo =0;
+
+		}
+		break;
+	case 3: 
+		enem[num_enem].pos_x = (50 + rand() % 300) - (50 + rand() % 300);
+		enem[num_enem].pos_y = 720;
+		enem[num_enem].vel_x = vel_enemy;
+		enem[num_enem].vel_y = 0;
+		enem[num_enem].ndisparos = 0;
+		enem[num_enem].flag = 0;
+		enem[num_enem].angulo = 45 * f;
+		break;
+	}
+	return enem[num_enem];
+
 }
 struct jugador velocidades_jugador(struct jugador player, int orientacion_player, bool freno, int choque[16])
 {
@@ -50,28 +90,71 @@ struct jugador velocidades_jugador(struct jugador player, int orientacion_player
 		}
 	}
 }
-int col_bala_enemigo(struct jugador player, struct enemy_ enem[max_enemy], int num_enem, int cant_disparos, struct bala_player disparos_ply[max_disparos_ply])
+void col_bala_enemigo(struct jugador player, struct enemy_ enem[max_enemy], int num_enem, int cant_disparos, struct bala_player disparos_ply[max_disparos_ply], int* ii, int* kk,int *activar_col)
 {
+	*activar_col = 0;
 	for (int k = 1; k <= num_enem; k++)
 	{
 		for (int i = 0; i <= cant_disparos; i++)
 		{
-			if (player.disparos_ply[i].pos_x >= enem[k].pos_x + 57 && player.disparos_ply[i].pos_x <= enem[k].pos_x + 97)
+			if (player.disparos_ply[i].pos_x >= enem[k].pos_x - 20 && player.disparos_ply[i].pos_x <= enem[k].pos_x + 20)
 			{
-				if (player.disparos_ply[i].pos_y >= enem[k].pos_y && player.disparos_ply[i].pos_y <= enem[k].pos_y + 157)
+				if (player.disparos_ply[i].pos_y >= enem[k].pos_y - 75 && player.disparos_ply[i].pos_y <= enem[k].pos_y + 75 )
 				{
 					player.disparos_ply[i].pos_y = 2000;
 					player.disparos_ply[i].pos_x = 2000;
 					player.disparos_ply[i].vel_x = 0;
 					player.disparos_ply[i].vel_y = 0;
-					return 1;
+					*activar_col = 1;
+					*ii = i;
+					*kk = k;
+
 				}
 				
 			}
 		}
-	}
-	return 0;
+	}	
 }
+void col_bala_jugador(struct jugador player, struct bala_ disparos[], int omega[], int orientacion_jugador, int col_jug_enem[], int ajuste,int* activar_col, int* ii)
+{
+	*activar_col = 0;
+
+	for (int i = 1; i <= max_disparos; i++)
+	{
+		
+		if (disparos[i].x <= (player.x + 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_x_jugador(omega, orientacion_jugador) && disparos[i].x >= (player.x - 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_x_jugador(omega, orientacion_jugador))
+		{
+			if (disparos[i].y >= (player.y - 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_y_jugador(omega, orientacion_jugador) && disparos[i].y <= (player.y + 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_y_jugador(omega, orientacion_jugador))
+			{
+				*activar_col = 1;
+				*ii = i;
+
+			}
+		}
+		
+	}
+}
+void col_enem_jugador(struct jugador player, struct enemy_ enem[], int omega[], int orientacion_jugador, int num_enem, int ajuste, int col_jug_enem[], int* activar_col, int* ii)
+{
+	*activar_col = 0;
+	for (int i = 1; i <= num_enem; i++)
+	{
+
+		if (enem[i].pos_x + 57 <= (player.x + 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_x_jugador(omega, orientacion_jugador) && enem[i].pos_x + 97 >= (player.x - 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_x_jugador(omega, orientacion_jugador))
+		{
+			if (enem[i].pos_y + 150 >= (player.y - 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_y_jugador(omega, orientacion_jugador) && enem[i].pos_y <= (player.y + 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_y_jugador(omega, orientacion_jugador))
+			{
+
+				*activar_col = 1;
+				*ii = i;
+
+			}
+		}
+
+	}
+
+}
+
 float error_x_jugador(int omega[16], int orientacion_jugador)
 {
 	float error_x;
@@ -98,7 +181,6 @@ float error_y_jugador(int omega[16], int orientacion_jugador)
 	}
 	return error_y;
 }
-
 void cargar_mapa(char nombre[10], char **mapa)
 {
 	char basura;
