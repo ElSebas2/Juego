@@ -87,7 +87,7 @@ int main()
 	int mapa_total[MAPA_JUEGO][MAPA_JUEGO];
 	int col_jug_enem[5];
 	int map_x[3], map_y[3];
-	int nivel_mapa = 1;
+	int nivel_mapa = 0;
 	init();
 	
 
@@ -161,14 +161,7 @@ int main()
 	fclose(item_curacion);
 	fclose(mapa_juego);
 
-	for (i = 0; i < MAPA_JUEGO; i++)
-	{
-		for (j = 0; j < MAPA_JUEGO; j++)
-		{
-			printf("%d", mapa_total[i][j]);
-		}
-		printf("\n");
-	}
+	
 	
 
 
@@ -331,6 +324,7 @@ int main()
 			
 			if (n == 1)
 			{
+				printf("NIVEL = %d\n", nivel_mapa + 1);
 				for (i = 0; i < SIZE; i++)
 				{
 					for (j = 0; j < SIZE; j++)
@@ -615,20 +609,19 @@ int main()
 							enem[i].pos_x = enem[i].pos_x + enem[i].vel_x;
 
 							al_draw_rotated_bitmap(enemy1,al_get_bitmap_width(enemy1)/2,al_get_bitmap_height(enemy1)/2, enem[i].pos_x, enem[i].pos_y, enem[i].angulo,0);
-							al_draw_rectangle(enem[i].pos_x + 20, enem[i].pos_y - 75, enem[i].pos_x - 20, enem[i].pos_y + 75, negro, 5);
-
+							al_draw_rectangle(enem[i].pos_x + 20 - 75 * sin(enem[i].angulo), enem[i].pos_y - 75*cos(enem[i].angulo), enem[i].pos_x - 20 + 75 * sin(enem[i].angulo), enem[i].pos_y + 75 * cos(enem[i].angulo), negro, 5);
 						}
 						else
 						{
 							
 							if (enem[i].flag != 0)
 							{
-								enem[i].pos_x = -1500;
-								enem[i].pos_y = -1500;
+								enem[i].pos_x = 0;
+								enem[i].pos_y = 0;
 								enem[i].vel_x = 0;
 								enem[i].vel_y = 0;
 								enem[i].ndisparos = 0;
-								//enem[i].flag = 1;
+								enem[i].flag = 1;
 							}
 						}
 					}
@@ -640,31 +633,27 @@ int main()
 						enem[i].vel_x = 0;
 						enem[i].vel_y = 0;
 						enem[i].ndisparos = 0;
+						
 
 					}
 				}
 			}
-
 			//================= CREACION DE LAS BALAS ENEMIGAS 1 =======================//
 			if (contt++ > 30)
 			{
 				aux = 0; contt = 0;
 
 			}
-			for (j = 1; j <= num_enem; j++)
+			if (aux == 0)
 			{
-
-				if (aux == 0)
+				for (j = 1; j <= num_enem; j++)
 				{
 					if (enem[j].ndisparos <= max_disparos)
 					{
 						if (enem[j].flag == 0)
 						{
 							enem[j].ndisparos++;
-							disparos[enem[j].ndisparos].x = enem[j].pos_x;
-							disparos[enem[j].ndisparos].y = enem[j].pos_y - 39;
-							disparos[enem[j].ndisparos].vel_x = speed_bala;
-							disparos[enem[j].ndisparos].vel_y = 0;
+							disparos[enem[j].ndisparos] = crear_balas(disparos, enem, j,nivel_mapa);
 						}
 						else
 						{
@@ -685,16 +674,19 @@ int main()
 												
 			{
 				disparos[i].x = disparos[i].x + disparos[i].vel_x;
-				if (disparos[i].x <= 1280)
+				if (disparos[i].x < 1280 && disparos[i].x > 0 && disparos[i].y < 720 && disparos[i].y > 0)
 				{
 					if (enem[i].flag == 0)
 					{
-						al_draw_bitmap(bala1[0], disparos[i].x, disparos[i].y, enem[i].flag);
+						al_draw_rotated_bitmap(bala1[0],al_get_bitmap_width(bala1[0])/2,al_get_bitmap_height(bala1[0]), disparos[i].x, disparos[i].y,disparos[i].angulo, enem[i].flag);
 					}
 				}
 				else
 				{
+					disparos[i].x = 0;
 					disparos[i].vel_x = 0;
+					disparos[i].y = 0;
+					disparos[i].vel_y = 0;
 				}
 			}
 
@@ -753,7 +745,7 @@ int main()
 			
 			
 			
-			al_draw_rectangle((player.x + 100 * sin(omega[orientacion_jugador] * f)) + error_x_jugador(omega, orientacion_jugador), (player.y - 100 * cos(omega[orientacion_jugador] * f)) - error_y_jugador(omega, orientacion_jugador), (player.x - 100 * sin(omega[orientacion_jugador] * f)) - error_x_jugador(omega, orientacion_jugador), (player.y + 100 * cos(omega[orientacion_jugador] * f)) + error_y_jugador(omega, orientacion_jugador), negro, 5);
+			al_draw_rectangle((player.x + 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_x_jugador(omega, orientacion_jugador), (player.y + 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) + error_y_jugador(omega, orientacion_jugador), (player.x - 100 * sin(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_x_jugador(omega, orientacion_jugador), (player.y - 100 * cos(col_jug_enem[orientacion_jugador - ajuste] * f)) - error_y_jugador(omega, orientacion_jugador), negro, 5);
 
 			col_bala_jugador(player, disparos, omega, orientacion_jugador,col_jug_enem,ajuste,&activar_col2, &i);
 			if (activar_col2 == 1)
@@ -768,9 +760,8 @@ int main()
 
 			//==================== COLISION JUGADOR-----ENEMIGOS   ======================//
 
-			//al_draw_rectangle(enem[k].pos_x + 57, enem[k].pos_y, enem[k].pos_x + 97, enem[k].pos_y + 157, negro, 5);
 			
-			col_enem_jugador(player, enem, omega, orientacion_jugador,num_enem,ajuste,col_jug_enem,&activar_col3,&i );
+			col_enem_jugador(player, enem, omega, orientacion_jugador,num_enem,ajuste,col_jug_enem,&activar_col3,&i);
 			if (activar_col3 == 1)
 			{
 				enem[i].flag = 1;
@@ -814,16 +805,38 @@ int main()
 			}
 
 				
-			if (enem[max_enemy - 1].flag != 0 || enem[max_enemy - 1].pos_y < -1)//enem[max_enemy- 1].flag != 0 || enem[max_enemy - 1].pos_y < -1
-			{					
-					al_draw_scaled_rotated_bitmap(flechas, al_get_bitmap_width(flechas) / 2, al_get_bitmap_height(flechas) / 2,1200,360,0.2,0.2,90*f ,0);
+			if (enem[max_enemy - 1].flag != 0)
+			{		
+
+				switch (nivel_mapa)
+				{
+				case 0:
+					al_draw_scaled_rotated_bitmap(flechas, al_get_bitmap_width(flechas) / 2, al_get_bitmap_height(flechas) / 2, 1200, 360, 0.2, 0.2, 90 * f, 0);
 					if (player.x > 1280)
 					{
 						player.x = 0;
+						n = 1;
 						nivel_mapa++;
 						num_enem = 0;
-						
+						contx = 0;
+						reset_enem(enem);
+						reset_disparos(disparos);
 					}
+					break;
+				case 1:
+					al_draw_scaled_rotated_bitmap(flechas, al_get_bitmap_width(flechas) / 2, al_get_bitmap_height(flechas) / 2, 640, 500, 0.2, 0.2, 180 * f, 0);
+					if (player.y > 720)
+					{
+						player.y = 0;
+						n = 1;
+						nivel_mapa++;
+						num_enem = 0;
+						contx = 0;
+						reset_enem(enem);
+						reset_disparos(disparos);
+
+					}
+				}
 			}
 
 
@@ -935,7 +948,7 @@ int main()
 			al_draw_scaled_bitmap(racha,0,0,al_get_bitmap_width(racha),al_get_bitmap_height(racha),1025,58, 2*al_get_bitmap_width(racha)/3, 2* al_get_bitmap_height(racha)/3, 0);
 			al_draw_textf(letra, negro, 940, 20, 0, "Puntaje: %d", puntajes);
 			al_draw_textf(letra1, negro, 1035, 60, 0, "Racha: x%d", rachas_);
-			al_draw_textf(letra2, negro, 10, 10,0,"Nivel: %d", nivel_mapa);
+			al_draw_textf(letra2, negro, 10, 10,0,"Nivel: %d", nivel_mapa + 1);
 			al_draw_scaled_bitmap(vida[vida_player], 0, 0, al_get_bitmap_width(vida[vida_player]), al_get_bitmap_height(vida[vida_player]), 700, 10, 2 * al_get_bitmap_width(vida[vida_player]) / 3, 2 * al_get_bitmap_height(vida[vida_player]) / 3, 0);
 			if (Evento.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 			{

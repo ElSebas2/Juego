@@ -1,3 +1,12 @@
+struct bala_
+{
+	int x;
+	int y;
+	int vel_x;
+	int vel_y;
+	float angulo;
+}disparos[max_disparos];
+
 struct enemy_
 {
 	int vida = 0;
@@ -7,7 +16,7 @@ struct enemy_
 	int vel_y;
 	int ndisparos = 0;
 	int flag = 0;
-	int angulo = 0;
+	float angulo = 0;
 }enem[max_enemy];
 
 
@@ -20,14 +29,6 @@ struct enemy_timer
 
 
 
-struct bala_
-{
-	int x;
-	int y;
-	int vel_x;
-	int vel_y;
-}disparos[max_disparos];
-
 struct bala_player
 {
 	int pos_x;
@@ -38,8 +39,8 @@ struct bala_player
 
 struct jugador
 {
-	int x = 500;
-	int y = 200;
+	int x = 600;
+	int y = 500;
 	float vel_x[16];
 	float vel_y[16];
 	int vida = 0;
