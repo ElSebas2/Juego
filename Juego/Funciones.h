@@ -13,7 +13,7 @@ void col_enem_jugador(struct jugador player, struct enemy_ enem[], int omega[], 
 struct bala_ crear_balas(struct bala_ disparos[], struct enemy_ enem[], int j,int nivel_mapa);
 void reset_enem(struct enemy_ enem[]);
 void reset_disparos(struct bala_ disparos[]);
-
+void angulo_rot_torreta(struct jugador player, int dx2[], int dy2[], int cont,float *angulo1);
 
 
 
@@ -221,6 +221,29 @@ float error_y_jugador(int omega[16], int orientacion_jugador)
 	}
 	return error_y;
 }
+void angulo_rot_torreta(struct jugador player, int dx2[], int dy2[], int cont,float *angulo1)
+{
+	
+	int i = 0;
+	for (int i = 0; i < cont; i++)
+	{
+		angulo1[i] = -asin((player.y - dy2[i]) / (sqrt((player.y - dy2[i]) * (player.y - dy2[i]) + (dx2[i] - player.x) * (dx2[i] - player.x))));
+		if (angulo1[i] >= -90 * f && angulo1[i] <= 0)
+		{
+			angulo1[i] = -acos((dx2[i] - player.x) / (sqrt((player.y - dy2[i]) * (player.y - dy2[i]) + (dx2[i] - player.x) * (dx2[i] - player.x))));
+			
+		}
+		if (angulo1[i] >= 0 && angulo1[i] <= 90 * f)
+		{
+			angulo1[i] = -acos((dx2[i] - player.x) / (sqrt((player.y - dy2[i]) * (player.y - dy2[i]) + (dx2[i] - player.x) * (dx2[i] - player.x))));
+			angulo1[i] = angulo1[i] * -1;
+		}
+	}	
+}
+
+
+
+
 void cargar_mapa(char nombre[10], char **mapa)
 {
 	char basura;

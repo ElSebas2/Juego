@@ -76,3 +76,14 @@ const char* map7 = "mapa7.txt";
 const char* map8 = "mapa8.txt";
 const char* map9 = "mapa9.txt";
 
+const char* fuego1_ = "Imagenes/Frame/fuego1_.png";
+const char* fuego2_ = "Imagenes/Frame/fuego2_.png";
+const char* fuego3_ = "Imagenes/Frame/fuego3_.png";
+const char* fuego4_ = "Imagenes/Frame/fuego4_.png";
+const char* fuego5_ = "Imagenes/Frame/fuego5_.png";
+const char* fuego6_ = "Imagenes/Frame/fuego6_.png";
+const char* fuego7_ = "Imagenes/Frame/fuego7_.png";
+const char* fuego8_ = "Imagenes/Frame/fuego8_.png";
+
+
+const char* torreta = "Imagenes/Enemigos/torre.png";
