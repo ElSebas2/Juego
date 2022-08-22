@@ -64,12 +64,26 @@ const char* repair = "Musica/Sonido_reparacion.ogg";
 
 const char* llave_ = "Imagenes/llave.png";
 
-const char* avion = "Imagenes/Enemigos/avion.png";
-const char* avion1 = "Imagenes/Enemigos/avion1.png";
-const char* avion2 = "Imagenes/Enemigos/avion2.png";
-const char* avion3 = "Imagenes/Enemigos/avion3.png";
-
-
-
 const char* negro_ = "Imagenes/matriz.jpg";
+const char* flecha = "Imagenes/apunta.png";
+const char* map1 = "mapa1.txt";
+const char* map2 = "mapa2.txt";
+const char* map3 = "mapa3.txt";
+const char* map4 = "mapa4.txt";
+const char* map5 = "mapa5.txt";
+const char* map6 = "mapa6.txt";
+const char* map7 = "mapa7.txt";
+const char* map8 = "mapa8.txt";
+const char* map9 = "mapa9.txt";
 
+const char* fuego1_ = "Imagenes/Frame/fuego1_.png";
+const char* fuego2_ = "Imagenes/Frame/fuego2_.png";
+const char* fuego3_ = "Imagenes/Frame/fuego3_.png";
+const char* fuego4_ = "Imagenes/Frame/fuego4_.png";
+const char* fuego5_ = "Imagenes/Frame/fuego5_.png";
+const char* fuego6_ = "Imagenes/Frame/fuego6_.png";
+const char* fuego7_ = "Imagenes/Frame/fuego7_.png";
+const char* fuego8_ = "Imagenes/Frame/fuego8_.png";
+
+
+const char* torreta = "Imagenes/Enemigos/torre.png";
